@@ -51,16 +51,8 @@ public class HexGrid : SingletoneBase<HexGrid>
 
     public Vector3 GetWorldPosition(Vector2Int position)
     {
-        int column = position.x;
-        int row = position.y;
-        float offset = (column % 2) == 0 ? (hexSize.y / 2f) : 0f;
-
-        float horizontalDistance = hexSize.x * (3f / 4f);
-        float verticalDistance = hexSize.y;
-
-        float xPosition = column * horizontalDistance;
-        float yPosition = row * verticalDistance - offset;
-
-        return origin + new Vector3(xPosition, yPosition, 0f);
+        var x = unitSize * 3 / 2 * position.x;
+        var y = unitSize * Mathf.Sqrt(3) / 2 * position.y;
+        return origin + new Vector3(x, y);
     }
 }

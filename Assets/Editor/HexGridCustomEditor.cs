@@ -38,10 +38,15 @@ public class HexGridCustomEditor : Editor
         {
             for (int x = 0; x < t.gridSize.x; x++)
             {
-                GameObject tile = (GameObject)PrefabUtility.InstantiatePrefab(t.hexPrefab, t.transform);
-                tile.name = $"Hex {x},{y}";
+                Vector2Int coordinates;
+                if (x % 2 == 0)
+                    coordinates = new Vector2Int(x, 2 * y);
+                else
+                    coordinates = new Vector2Int(x, 2 * y + 1);
 
-                Vector2Int coordinates = new Vector2Int(x, y);
+                GameObject tile = (GameObject)PrefabUtility.InstantiatePrefab(t.hexPrefab, t.transform);
+                tile.name = $"Hex {coordinates.x},{coordinates.y}";
+
                 tile.transform.position = HexGrid.instance.GetWorldPosition(coordinates);
 
                 HexRenderer hexRenderer = tile.GetComponent<HexRenderer>();
