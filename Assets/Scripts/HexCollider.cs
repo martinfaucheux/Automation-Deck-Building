@@ -5,6 +5,4 @@ using UnityEngine;
 public class HexCollider : MonoBehaviour
 {
     public Vector2Int position;
-
-
 }

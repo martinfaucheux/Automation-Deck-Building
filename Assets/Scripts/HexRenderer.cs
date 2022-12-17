@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public struct HexFace
 {
@@ -27,11 +28,13 @@ public class HexRenderer : MonoBehaviour
     private List<HexFace> _faces;
 
     public Material material;
-    public Color color;
     public float innerSize;
     public float outerSize;
     public float height;
+    // to be displayed in editor
+    public Vector2Int coordinates;
 
+    [SerializeField] TextMeshPro _labelText;
 
     void Awake()
     {
@@ -47,24 +50,11 @@ public class HexRenderer : MonoBehaviour
         _meshFilter.mesh = _mesh;
     }
 
-
-    // void OnEnable()
-    // {
-    //     DrawMesh();
-    // }
-
-    // public void OnValidate()
-    // {
-    //     if (Application.isPlaying)
-    //         DrawMesh();
-    // }
-
     public void Initialize(
         float outerSize,
         float innerSize,
         float height,
-        Material material,
-        Color color
+        Vector2Int coordinates
     )
     {
         if (_meshRenderer != null || _meshFilter == null)
@@ -73,8 +63,7 @@ public class HexRenderer : MonoBehaviour
         this.outerSize = outerSize;
         this.innerSize = innerSize;
         this.height = height;
-        this.material = material;
-        this.color = color;
+        this.coordinates = coordinates;
     }
 
     public void DrawMesh()
@@ -82,6 +71,9 @@ public class HexRenderer : MonoBehaviour
         _meshRenderer.material = material;
         DrawFaces();
         CombineFaces();
+
+        _labelText.text = $"{coordinates.x},{coordinates.y}";
+        _labelText.color = material.color;
     }
 
     private void DrawFaces()
