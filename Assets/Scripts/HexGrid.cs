@@ -47,12 +47,31 @@ public class HexGrid : SingletoneBase<HexGrid>
         _colliders[hexCollider.position].Remove(hexCollider);
     }
 
-    public List<HexCollider> GetCollidersAtPosition(Vector2Int position) => _colliders[position];
-
     public Vector3 GetWorldPosition(Vector2Int position)
     {
         var x = unitSize * 3 / 2 * position.x;
         var y = unitSize * Mathf.Sqrt(3) / 2 * position.y;
         return origin + new Vector3(x, y);
+    }
+
+    public List<HexCollider> GetCollidersAtPosition(Vector2Int position)
+    {
+        if (_colliders.ContainsKey(position))
+            return _colliders[position];
+        return new List<HexCollider>();
+    }
+
+    public List<HexCollider> GetNeighbors(Vector2Int position, Direction direction)
+    {
+        return GetCollidersAtPosition(position + direction.ToHexPosition());
+    }
+
+    public List<HexCollider> GetNeighbors(Vector2Int position)
+    {
+        List<HexCollider> colliders = new List<HexCollider>();
+        foreach (Direction direction in Direction.GetAll<Direction>())
+            colliders.AddRange(GetNeighbors(position, direction));
+
+        return colliders;
     }
 }
