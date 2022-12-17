@@ -2,27 +2,61 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using System.Linq;
 
-[Serializable]
-public class Direction : Enumeration
+
+// Define an extension method in a non-nested static class.
+namespace DirectionEnum
 {
-    private int xOffset;
-    private int yOffset;
-
-    public static Direction NONE = new Direction(0, nameof(NONE), 0, 0);
-    public static Direction NE = new Direction(1, nameof(NE), 1, 1);
-    public static Direction N = new Direction(2, nameof(N), 0, 2);
-    public static Direction NO = new Direction(3, nameof(NO), -1, 1);
-    public static Direction SO = new Direction(4, nameof(SO), -1, -1);
-    public static Direction S = new Direction(5, nameof(S), 0, -2);
-    public static Direction SE = new Direction(6, nameof(SO), 1, -1);
-
-    public Direction(int id, string name, int xOffset, int yOffset) : base(id, name)
+    public static class Extensions
     {
-        this.xOffset = xOffset;
-        this.yOffset = yOffset;
+        public static float ToAngleDegree(this Direction direction)
+        {
+            return 60 * (int)direction - 30;
+        }
+
+        public static Vector2Int ToHexPosition(this Direction direction)
+        {
+            int x = 0;
+            int y = 0;
+            switch (direction)
+            {
+                case Direction.NONE:
+                    break;
+                case Direction.NE:
+                    x = 1;
+                    y = 1;
+                    break;
+                case Direction.N:
+                    y = 2;
+                    break;
+                case Direction.NO:
+                    x = -1;
+                    y = 1;
+                    break;
+                case Direction.SO:
+                    x = -1;
+                    y = -1;
+                    break;
+                case Direction.S:
+                    y = -2;
+                    break;
+                case Direction.SE:
+                    x = 1;
+                    y = -1;
+                    break;
+            }
+            return new Vector2Int(x, y);
+        }
     }
 
-    public Vector2Int ToHexPosition() => new Vector2Int(xOffset, yOffset);
-    public float ToAngleDegree() => 60 * this.Id - 30;
+    public enum Direction { NONE = 0, NE = 1, N = 2, NO = 3, SO = 4, S = 5, SE = 6 };
+
+    public static class EnumUtil
+    {
+        public static IEnumerable<T> GetValues<T>()
+        {
+            return Enum.GetValues(typeof(T)).Cast<T>();
+        }
+    }
 }

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using DirectionEnum;
 
 [ExecuteInEditMode]
 public class HexGrid : SingletoneBase<HexGrid>
@@ -47,11 +48,21 @@ public class HexGrid : SingletoneBase<HexGrid>
         _colliders[hexCollider.position].Remove(hexCollider);
     }
 
-    public Vector3 GetWorldPosition(Vector2Int position)
+    public Vector3 GetWorldPos(Vector2Int position)
     {
         var x = unitSize * 3 / 2 * position.x;
         var y = unitSize * Mathf.Sqrt(3) / 2 * position.y;
         return origin + new Vector3(x, y);
+    }
+
+    public Vector2Int GetHexPos(Vector3 worldPosition)
+    {
+        worldPosition -= origin;
+
+        float x = worldPosition.x / (unitSize * 3 / 2);
+        float y = worldPosition.y / (unitSize * Mathf.Sqrt(3) / 2);
+
+        return new Vector2Int((int)x, (int)y);
     }
 
     public List<HexCollider> GetCollidersAtPosition(Vector2Int position)
@@ -69,7 +80,7 @@ public class HexGrid : SingletoneBase<HexGrid>
     public List<HexCollider> GetNeighbors(Vector2Int position)
     {
         List<HexCollider> colliders = new List<HexCollider>();
-        foreach (Direction direction in Direction.GetAll<Direction>())
+        foreach (Direction direction in EnumUtil.GetValues<Direction>())
             colliders.AddRange(GetNeighbors(position, direction));
 
         return colliders;

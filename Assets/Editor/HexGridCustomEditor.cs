@@ -47,7 +47,7 @@ public class HexGridCustomEditor : Editor
                 GameObject tile = (GameObject)PrefabUtility.InstantiatePrefab(t.hexPrefab, t.transform);
                 tile.name = $"Hex {coordinates.x},{coordinates.y}";
 
-                tile.transform.position = HexGrid.instance.GetWorldPosition(coordinates);
+                tile.transform.position = HexGrid.instance.GetWorldPos(coordinates);
 
                 HexRenderer hexRenderer = tile.GetComponent<HexRenderer>();
                 hexRenderer.Initialize(
