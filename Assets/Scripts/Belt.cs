@@ -2,11 +2,16 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using DirectionEnum;
+using System.Linq;
 
 public class Belt : MonoBehaviour
 {
     [Tooltip("When building belt systems, indicate whether this belt has been treated")]
     public bool isDirty = true;
+
+    // Marked as true if the resource should move at the end of processing.
+    public bool willFlush { get; private set; } = false;
+
     [SerializeField] Direction _direction;
     [SerializeField] HexCollider _collider;
     private Resource _heldResource;
@@ -39,24 +44,45 @@ public class Belt : MonoBehaviour
     }
 
     public Vector2Int GetTargetPos() => position + _direction.ToHexPosition();
+    public Belt GetTargetBelt() => BeltManager.instance.GetBeltAtPos(GetTargetPos());
 
-    public bool IsConnected(Belt belt)
-    {
-        return (
-            this.GetTargetPos() == belt.position || belt.GetTargetPos() == this.position
-        );
-    }
+    public void ResetWillFlush() => willFlush = false;
 
-    public bool CanFlush()
+    public void UpdateWillFlush()
     {
-        // TODO: this is invalid if some resources are blocked but some not
-        return BeltManager.instance.GetBeltAtPos(GetTargetPos()) != null;
+        // check if target position has a belt
+        Belt targetBelt = GetTargetBelt();
+        if (targetBelt != null)
+        {
+            willFlush = !(
+                GetNeighbors()
+                // get only belts pointing toward target
+                .Where(tuple => tuple.Item1.Opposite() == tuple.Item2._direction)
+                // remove direction
+                .Select(tuple => tuple.Item2)
+                // filter only the one that will flush a resource
+                .Where(belt => belt.willFlush && belt._heldResource != null)
+                .Any()
+            );
+        }
+        else
+        {
+            willFlush = false;
+        }
     }
 
     public void Flush() => StartCoroutine(FlushCoroutine());
 
-    public IEnumerator FlushCoroutine()
+    private IEnumerator FlushCoroutine()
     {
-        yield break;
+        Resource initialHeldItem = _heldResource;
+
+        // wait end of frame to make sure each initial resource has been cached
+        yield return new WaitForEndOfFrame();
+
+        // pass resource
+        GetTargetBelt()._heldResource = initialHeldItem;
+
+        // TODO: lean tween move
     }
 }

@@ -23,14 +23,14 @@ public class HexGrid : SingletoneBase<HexGrid>
         );
     }
 
-    private GenericGrid<List<HexCollider>> _colliders;
+    private GenericGrid<Dictionary<HexLayer, HexCollider>> _colliders;
     // generated once at runtime
     public Vector2 hexSize { get; private set; }
 
     protected override void Awake()
     {
         base.Awake();
-        _colliders = new GenericGrid<List<HexCollider>>();
+        _colliders = new GenericGrid<Dictionary<HexLayer, HexCollider>>();
         hexSize = unitSize * new Vector2(2f, Mathf.Sqrt(3f));
     }
 
@@ -38,14 +38,14 @@ public class HexGrid : SingletoneBase<HexGrid>
     {
         Vector2Int position = hexCollider.position;
         if (!_colliders.ContainsKey(position))
-            _colliders[position] = new List<HexCollider>();
+            _colliders[position] = new Dictionary<HexLayer, HexCollider>();
 
-        _colliders[position].Add(hexCollider);
+        _colliders[position][hexCollider.layer] = hexCollider;
     }
 
     public void RemoveCollider(HexCollider hexCollider)
     {
-        _colliders[hexCollider.position].Remove(hexCollider);
+        _colliders[hexCollider.position].Remove(hexCollider.layer);
     }
 
     public Vector3 GetWorldPos(Vector2Int position)
@@ -65,28 +65,28 @@ public class HexGrid : SingletoneBase<HexGrid>
         return new Vector2Int((int)x, (int)y);
     }
 
-    public List<HexCollider> GetCollidersAtPosition(Vector2Int position)
+    public HexCollider GetColliderAtPosition(Vector2Int position, HexLayer layer)
     {
         if (_colliders.ContainsKey(position))
-            return _colliders[position];
-        return new List<HexCollider>();
+            if (_colliders[position].ContainsKey(layer))
+                return _colliders[position][layer];
+        return null;
     }
 
-    public List<HexCollider> GetNeighbors(Vector2Int position, Direction direction)
+    public HexCollider GetNeighbor(Vector2Int position, HexLayer layer, Direction direction)
     {
-        return GetCollidersAtPosition(position + direction.ToHexPosition());
+        return GetColliderAtPosition(position + direction.ToHexPosition(), layer);
     }
 
-    public List<HexCollider> GetNeighbors(Vector2Int position)
+    public List<HexCollider> GetNeighbors(Vector2Int position, HexLayer layer)
     {
         List<HexCollider> colliders = new List<HexCollider>();
         foreach (Direction direction in EnumUtil.GetValues<Direction>())
         {
             if (direction == Direction.NONE)
                 continue;
-            colliders.AddRange(GetNeighbors(position, direction));
+            colliders.Add(GetNeighbor(position, layer, direction));
         }
-
         return colliders;
     }
 }

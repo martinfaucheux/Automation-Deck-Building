@@ -5,6 +5,7 @@ using UnityEngine;
 public class HexCollider : MonoBehaviour
 {
     public Vector2Int position;
+    public HexLayer layer;
 
     public HexGrid grid { get => HexGrid.instance; }
 

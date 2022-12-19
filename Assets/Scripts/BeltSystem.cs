@@ -8,17 +8,24 @@ public class BeltSystem : MonoBehaviour
 {
     private List<Belt> _belts = new List<Belt>();
 
+    void Start()
+    {
+        BeltManager.instance.onTick += OnTick;
+    }
+
+    void OnDestroy()
+    {
+        BeltManager.instance.onTick -= OnTick;
+    }
+
     public void AddBelt(Belt belt, int index = 0)
     {
         _belts.Insert(index, belt);
         _belts.Add(belt);
         belt.isDirty = false;
 
-        foreach ((Direction, Belt) neighbor in belt.GetNeighbors())
+        foreach ((Direction direction, Belt neighborBelt) in belt.GetNeighbors())
         {
-            Direction direction = neighbor.Item1;
-            Belt neighborBelt = neighbor.Item2;
-
             if (neighborBelt.isDirty)
             {
                 // if neighbor is target of belt, it should be come before in the list
@@ -28,16 +35,29 @@ public class BeltSystem : MonoBehaviour
                 // if belt is target of neighbor, the belt should come before.
                 else if (belt.position == neighborBelt.GetTargetPos())
                     AddBelt(neighborBelt, index + 1);
-
             }
         }
     }
 
-    public bool IsBlocked() => _belts.Where(belt => !belt.CanFlush()).Any();
+    private void OnTick()
+    {
+        UpdateWillFlush();
+        Move();
+    }
+
+    public void UpdateWillFlush()
+    {
+        foreach (Belt belt in _belts)
+            belt.ResetWillFlush();
+
+        foreach (Belt belt in _belts)
+            belt.UpdateWillFlush();
+    }
 
     public void Move()
     {
         foreach (Belt belt in _belts)
-            belt.Flush();
+            if (belt.willFlush)
+                belt.Flush();
     }
 }

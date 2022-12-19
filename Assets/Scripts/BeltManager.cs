@@ -6,7 +6,7 @@ using System.Collections.Generic;
 public class BeltManager : SingletoneBase<BeltManager>
 {
     public event Action onTick;
-    public float tickPeriod = 1f;
+    public float tickPeriod = 0.5f;
     private float lastTick;
     private GenericGrid<Belt> _beltGrid = new GenericGrid<Belt>();
     private List<BeltSystem> _beltSystems = new List<BeltSystem>();
@@ -55,7 +55,7 @@ public class BeltManager : SingletoneBase<BeltManager>
             if (!belt.isDirty)
                 continue;
 
-            BeltSystem system = new BeltSystem();
+            BeltSystem system = gameObject.AddComponent<BeltSystem>();
             system.AddBelt(belt);
             _beltSystems.Add(system);
         }
