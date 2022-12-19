@@ -12,7 +12,7 @@ namespace DirectionEnum
     {
         public static float ToAngleDegree(this Direction direction)
         {
-            return 60 * (int)direction - 30;
+            return 60 * (int)direction + 30;
         }
 
         public static Vector2Int ToHexPosition(this Direction direction)
@@ -48,9 +48,16 @@ namespace DirectionEnum
             }
             return new Vector2Int(x, y);
         }
+
+        public static Direction Opposite(this Direction direction)
+        {
+            if (direction == Direction.NONE)
+                return Direction.NONE;
+            return (Direction)(((int)direction + 3) % 6);
+        }
     }
 
-    public enum Direction { NONE = 0, NE = 1, N = 2, NO = 3, SO = 4, S = 5, SE = 6 };
+    public enum Direction { NE = 0, N = 1, NO = 2, SO = 3, S = 4, SE = 5, NONE = 6 };
 
     public static class EnumUtil
     {

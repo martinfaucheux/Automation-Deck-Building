@@ -23,14 +23,14 @@ public class HexGrid : SingletoneBase<HexGrid>
         );
     }
 
-    private GenericGrid<HexCollider> _colliders;
+    private GenericGrid<List<HexCollider>> _colliders;
     // generated once at runtime
     public Vector2 hexSize { get; private set; }
 
     protected override void Awake()
     {
         base.Awake();
-        _colliders = new GenericGrid<HexCollider>();
+        _colliders = new GenericGrid<List<HexCollider>>();
         hexSize = unitSize * new Vector2(2f, Mathf.Sqrt(3f));
     }
 
@@ -81,7 +81,11 @@ public class HexGrid : SingletoneBase<HexGrid>
     {
         List<HexCollider> colliders = new List<HexCollider>();
         foreach (Direction direction in EnumUtil.GetValues<Direction>())
+        {
+            if (direction == Direction.NONE)
+                continue;
             colliders.AddRange(GetNeighbors(position, direction));
+        }
 
         return colliders;
     }
