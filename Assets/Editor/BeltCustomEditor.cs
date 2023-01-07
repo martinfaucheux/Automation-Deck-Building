@@ -21,6 +21,7 @@ public class BeltCustomEditor : Editor
         {
             t.InferDirection();
             EditorUtility.SetDirty(t.gameObject);
+            PrefabUtility.RecordPrefabInstancePropertyModifications(t);
         }
     }
 }

@@ -28,6 +28,7 @@ public class Belt : MonoBehaviour
         BeltManager.instance.RemoveBelt(this);
     }
 
+
     public void SetHeldResource(Resource resource) => _heldResource = resource;
 
     public List<(Direction, Belt)> GetNeighbors()
@@ -92,8 +93,17 @@ public class Belt : MonoBehaviour
             initialHeldResource.Move(targetBelt.position);
     }
 
+    private void CleanRotation()
+    {
+        int zRotation = Mathf.RoundToInt(transform.rotation.eulerAngles.z);
+        int rotationPace = 30;
+        int finalZrotation = (zRotation + rotationPace / 2) / rotationPace * rotationPace;
+        transform.rotation = Quaternion.Euler(0, 0, finalZrotation);
+    }
+
     public void InferDirection()
     {
+        CleanRotation();
         int angle = Mathf.RoundToInt(transform.rotation.eulerAngles.z);
 
         if (angle % 60 == 0)
