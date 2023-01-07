@@ -7,6 +7,7 @@ public class BeltManager : SingletoneBase<BeltManager>
 {
     public event Action onTick;
     public float tickPeriod = 0.5f;
+    public float moveDuration = 0.1f;
     private float lastTick;
     private GenericGrid<Belt> _beltGrid = new GenericGrid<Belt>();
     private List<BeltSystem> _beltSystems = new List<BeltSystem>();
@@ -40,7 +41,6 @@ public class BeltManager : SingletoneBase<BeltManager>
         foreach (BeltSystem system in _beltSystems)
             Destroy(system);
         _beltSystems = new List<BeltSystem>();
-
     }
 
     public void BuildSystems()

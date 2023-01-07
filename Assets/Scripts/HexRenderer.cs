@@ -36,10 +36,10 @@ public class HexRenderer : MonoBehaviour
 
     [SerializeField] TextMeshPro _labelText;
 
-    void Awake()
-    {
-        SetMeshComponents();
-    }
+    // void Awake()
+    // {
+    //     SetMeshComponents();
+    // }
 
     private void SetMeshComponents()
     {

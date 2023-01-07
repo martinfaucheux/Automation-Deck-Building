@@ -6,7 +6,7 @@ using DirectionEnum;
 
 public class BeltSystem : MonoBehaviour
 {
-    private List<Belt> _belts = new List<Belt>();
+    [SerializeField] List<Belt> _belts = new List<Belt>();
 
     void Start()
     {
@@ -21,7 +21,6 @@ public class BeltSystem : MonoBehaviour
     public void AddBelt(Belt belt, int index = 0)
     {
         _belts.Insert(index, belt);
-        _belts.Add(belt);
         belt.isDirty = false;
 
         foreach ((Direction direction, Belt neighborBelt) in belt.GetNeighbors())

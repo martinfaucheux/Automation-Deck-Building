@@ -18,8 +18,8 @@ public class HexGrid : SingletoneBase<HexGrid>
     public Vector2 worldSize
     {
         get => new Vector2(
-            (3f / 4f) * hexSize.x * gridSize.x,
-            hexSize.y * (gridSize.y + 0.5f)
+            (0.75f * gridSize.x + 0.25f) * hexSize.x,
+            (gridSize.y + 0.5f) * hexSize.y
         );
     }
 
@@ -58,11 +58,38 @@ public class HexGrid : SingletoneBase<HexGrid>
     public Vector2Int GetHexPos(Vector3 worldPosition)
     {
         worldPosition -= origin;
-
         float x = worldPosition.x / (unitSize * 3 / 2);
         float y = worldPosition.y / (unitSize * Mathf.Sqrt(3) / 2);
 
-        return new Vector2Int((int)x, (int)y);
+        Vector2Int hexPos = new Vector2Int(Mathf.RoundToInt(x), Mathf.RoundToInt(y));
+        return hexPos;
+
+        // if (IsValideCoordinates(hexPos))
+        // {
+        //     return hexPos;
+        // }
+        // else
+        // {
+        //     Vector2Int nearestPosition = hexPos;
+        //     float minDist = Mathf.Infinity;
+        //     Vector2Int[] offsets = new Vector2Int[]{
+        //         new Vector2Int(0, 1),
+        //         new Vector2Int(0, -1),
+        //         new Vector2Int(1, 0),
+        //         new Vector2Int(-1, 0),
+        //     };
+        //     foreach (Vector2Int offset in offsets)
+        //     {
+        //         Vector2Int point = hexPos + offset;
+        //         float sqDist = ((Vector3)((Vector2)point) - worldPosition).sqrMagnitude;
+        //         if (sqDist < minDist)
+        //         {
+        //             minDist = sqDist;
+        //             nearestPosition = point;
+        //         }
+        //     }
+        //     return nearestPosition;
+        // }
     }
 
     public HexCollider GetColliderAtPosition(Vector2Int position, HexLayer layer)
@@ -89,4 +116,6 @@ public class HexGrid : SingletoneBase<HexGrid>
         }
         return colliders;
     }
+
+    public static bool IsValideCoordinates(Vector2Int coordinates) => (coordinates.x + coordinates.y) % 2 == 0;
 }

@@ -4,6 +4,7 @@ using UnityEngine;
 using DirectionEnum;
 using System.Linq;
 
+[RequireComponent(typeof(HexCollider))]
 public class Belt : MonoBehaviour
 {
     [Tooltip("When building belt systems, indicate whether this belt has been treated")]
@@ -26,6 +27,8 @@ public class Belt : MonoBehaviour
     {
         BeltManager.instance.RemoveBelt(this);
     }
+
+    public void SetHeldResource(Resource resource) => _heldResource = resource;
 
     public List<(Direction, Belt)> GetNeighbors()
     {
@@ -75,14 +78,32 @@ public class Belt : MonoBehaviour
 
     private IEnumerator FlushCoroutine()
     {
-        Resource initialHeldItem = _heldResource;
+        Resource initialHeldResource = _heldResource;
+        _heldResource = null;
 
         // wait end of frame to make sure each initial resource has been cached
         yield return new WaitForEndOfFrame();
 
         // pass resource
-        GetTargetBelt()._heldResource = initialHeldItem;
+        Belt targetBelt = GetTargetBelt();
+        targetBelt._heldResource = initialHeldResource;
 
-        // TODO: lean tween move
+        if (initialHeldResource != null)
+            initialHeldResource.Move(targetBelt.position);
+    }
+
+    public void InferDirection()
+    {
+        int angle = Mathf.RoundToInt(transform.rotation.eulerAngles.z);
+
+        if (angle % 60 == 0)
+        {
+            int angleId = (angle / 60) % 6;
+            _direction = (Direction)angleId;
+        }
+        else
+        {
+            Debug.LogError("Invalid angle, must be a mulitple of 60");
+        }
     }
 }

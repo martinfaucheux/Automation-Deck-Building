@@ -20,6 +20,17 @@ public class HexCollider : MonoBehaviour
         grid?.RemoveCollider(this);
     }
 
-    public void SyncPosition() => position = grid.GetHexPos(this.transform.position);
+    public void SyncPosition()
+    {
+        // TODO: this is invalid, most likely because of GetHexPos
+        position = grid.GetHexPos(this.transform.position);
+        Debug.Log("position: " + position.ToString(), gameObject);
+    }
     public Vector3 GetWorldPos => grid.GetWorldPos(position);
+
+    public void AlignOnGrid()
+    {
+        SyncPosition();
+        transform.position = HexGrid.instance.GetWorldPos(position);
+    }
 }

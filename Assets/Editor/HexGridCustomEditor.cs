@@ -24,6 +24,9 @@ public class HexGridCustomEditor : Editor
             RecalculateOrigin();
             EditorUtility.SetDirty(t.gameObject);
         }
+
+        if (GUILayout.Button("Align all colliders"))
+            AlignCollidersOnGrid();
     }
 
     private void ClearHex()
@@ -63,6 +66,12 @@ public class HexGridCustomEditor : Editor
 
     private void RecalculateOrigin()
     {
-        t.origin = -0.5f * HexGrid.instance.worldSize;
+        t.origin = -0.5f * HexGrid.instance.worldSize + 0.5f * HexGrid.instance.hexSize;
+    }
+
+    private void AlignCollidersOnGrid()
+    {
+        foreach (HexCollider collider in FindObjectsOfType<HexCollider>())
+            collider.AlignOnGrid();
     }
 }

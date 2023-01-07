@@ -22,5 +22,10 @@ public class HexColliderCustomEditor : Editor
             t.SyncPosition();
             EditorUtility.SetDirty(t.gameObject);
         }
+        if (GUILayout.Button("Align on grid"))
+        {
+            t.AlignOnGrid();
+            EditorUtility.SetDirty(t.gameObject);
+        }
     }
 }
