@@ -6,7 +6,7 @@ using DirectionEnum;
 
 public class BeltSystem : MonoBehaviour
 {
-    [SerializeField] List<Belt> _belts = new List<Belt>();
+    [SerializeField] List<ResourceHolder> _resourceHolders = new List<ResourceHolder>();
 
     void Start()
     {
@@ -18,22 +18,22 @@ public class BeltSystem : MonoBehaviour
         BeltManager.instance.onTick -= OnTick;
     }
 
-    public void AddBelt(Belt belt, int index = 0)
+    public void AddBelt(ResourceHolder resourceHolder, int index = 0)
     {
-        _belts.Insert(index, belt);
-        belt.isDirty = false;
+        _resourceHolders.Insert(index, resourceHolder);
+        resourceHolder.isDirty = false;
 
-        foreach ((Direction direction, Belt neighborBelt) in belt.GetNeighbors())
+        foreach ((Direction direction, ResourceHolder neighborHolder) in resourceHolder.GetNeighbors())
         {
-            if (neighborBelt.isDirty)
+            if (neighborHolder.isDirty)
             {
                 // if neighbor is target of belt, it should be come before in the list
-                if (belt.GetTargetPos() == neighborBelt.position)
-                    AddBelt(neighborBelt, index);
+                if (resourceHolder.GetTargetPos() == neighborHolder.position)
+                    AddBelt(neighborHolder, index);
 
                 // if belt is target of neighbor, the belt should come before.
-                else if (belt.position == neighborBelt.GetTargetPos())
-                    AddBelt(neighborBelt, index + 1);
+                else if (resourceHolder.position == neighborHolder.GetTargetPos())
+                    AddBelt(neighborHolder, index + 1);
             }
         }
     }
@@ -46,17 +46,17 @@ public class BeltSystem : MonoBehaviour
 
     public void UpdateWillFlush()
     {
-        foreach (Belt belt in _belts)
-            belt.ResetWillFlush();
+        foreach (ResourceHolder resourceHolder in _resourceHolders)
+            resourceHolder.ResetWillFlush();
 
-        foreach (Belt belt in _belts)
-            belt.UpdateWillFlush();
+        foreach (ResourceHolder resourceHolder in _resourceHolders)
+            resourceHolder.UpdateWillFlush();
     }
 
     public void Move()
     {
-        foreach (Belt belt in _belts)
-            if (belt.willFlush)
-                belt.Flush();
+        foreach (ResourceHolder resourceHolder in _resourceHolders)
+            if (resourceHolder.willFlush)
+                resourceHolder.Flush();
     }
 }

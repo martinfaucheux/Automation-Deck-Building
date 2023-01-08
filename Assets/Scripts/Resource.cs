@@ -9,9 +9,9 @@ public class Resource : MonoBehaviour
 
     void Start()
     {
-        Belt belt = BeltManager.instance.GetBeltAtPos(_hexCollider.position);
-        if (belt != null)
-            belt.SetHeldResource(this);
+        ResourceHolder resourceHolder = BeltManager.instance.GetBeltAtPos(_hexCollider.position);
+        if (resourceHolder != null)
+            resourceHolder.SetHeldResource(this);
 
     }
 

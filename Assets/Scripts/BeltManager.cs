@@ -9,12 +9,12 @@ public class BeltManager : SingletoneBase<BeltManager>
     public float tickPeriod = 0.5f;
     public float moveDuration = 0.1f;
     private float lastTick;
-    private GenericGrid<Belt> _beltGrid = new GenericGrid<Belt>();
+    private GenericGrid<ResourceHolder> _beltGrid = new GenericGrid<ResourceHolder>();
     private List<BeltSystem> _beltSystems = new List<BeltSystem>();
 
-    public void AddBelt(Belt belt) => _beltGrid[belt.position] = belt;
-    public void RemoveBelt(Belt belt) => _beltGrid.Remove(belt.position);
-    public Belt GetBeltAtPos(Vector2Int position)
+    public void AddBelt(ResourceHolder belt) => _beltGrid[belt.position] = belt;
+    public void RemoveBelt(ResourceHolder belt) => _beltGrid.Remove(belt.position);
+    public ResourceHolder GetBeltAtPos(Vector2Int position)
     {
         if (_beltGrid.ContainsKey(position))
             return _beltGrid[position];
