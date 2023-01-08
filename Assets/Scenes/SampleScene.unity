@@ -2482,6 +2482,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Belt (6)
       objectReference: {fileID: 0}
+    - target: {fileID: 2632613435689342394, guid: da9b2dfcef3374b4ba278924ff6c2c36, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2632613435689342399, guid: da9b2dfcef3374b4ba278924ff6c2c36, type: 3}
       propertyPath: _direction
       value: 3
@@ -3085,6 +3089,10 @@ PrefabInstance:
     - target: {fileID: 2632613435689342394, guid: da9b2dfcef3374b4ba278924ff6c2c36, type: 3}
       propertyPath: m_Name
       value: Belt (4)
+      objectReference: {fileID: 0}
+    - target: {fileID: 2632613435689342394, guid: da9b2dfcef3374b4ba278924ff6c2c36, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2632613435689342399, guid: da9b2dfcef3374b4ba278924ff6c2c36, type: 3}
       propertyPath: _direction
@@ -4710,7 +4718,7 @@ Camera:
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 55
+    m_Bits: 183
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
@@ -10721,6 +10729,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Belt (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 2632613435689342394, guid: da9b2dfcef3374b4ba278924ff6c2c36, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2632613435689342399, guid: da9b2dfcef3374b4ba278924ff6c2c36, type: 3}
       propertyPath: _direction
       value: 1
@@ -11262,6 +11274,10 @@ PrefabInstance:
     - target: {fileID: 2632613435689342394, guid: da9b2dfcef3374b4ba278924ff6c2c36, type: 3}
       propertyPath: m_Name
       value: Belt (8)
+      objectReference: {fileID: 0}
+    - target: {fileID: 2632613435689342394, guid: da9b2dfcef3374b4ba278924ff6c2c36, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2632613435689342399, guid: da9b2dfcef3374b4ba278924ff6c2c36, type: 3}
       propertyPath: _direction
@@ -12330,6 +12346,10 @@ PrefabInstance:
     - target: {fileID: 2632613435689342394, guid: da9b2dfcef3374b4ba278924ff6c2c36, type: 3}
       propertyPath: m_Name
       value: Belt (9)
+      objectReference: {fileID: 0}
+    - target: {fileID: 2632613435689342394, guid: da9b2dfcef3374b4ba278924ff6c2c36, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2632613435689342399, guid: da9b2dfcef3374b4ba278924ff6c2c36, type: 3}
       propertyPath: _direction
@@ -22116,6 +22136,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Belt (7)
       objectReference: {fileID: 0}
+    - target: {fileID: 2632613435689342394, guid: da9b2dfcef3374b4ba278924ff6c2c36, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2632613435689342399, guid: da9b2dfcef3374b4ba278924ff6c2c36, type: 3}
       propertyPath: _direction
       value: 4
@@ -27465,6 +27489,10 @@ PrefabInstance:
     - target: {fileID: 2632613435689342394, guid: da9b2dfcef3374b4ba278924ff6c2c36, type: 3}
       propertyPath: m_Name
       value: Belt (5)
+      objectReference: {fileID: 0}
+    - target: {fileID: 2632613435689342394, guid: da9b2dfcef3374b4ba278924ff6c2c36, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2632613435689342399, guid: da9b2dfcef3374b4ba278924ff6c2c36, type: 3}
       propertyPath: _direction

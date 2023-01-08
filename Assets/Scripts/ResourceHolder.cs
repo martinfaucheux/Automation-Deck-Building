@@ -109,7 +109,10 @@ public abstract class ResourceHolder : MonoBehaviour
     {
         if (!willFlush)
         {
-            SetHeldResource(_cachedHeldResource);
+            // if _cachedResource is not null, then this might have receive a new resource
+            // in the meantime
+            if (_cachedHeldResource != null)
+                SetHeldResource(_cachedHeldResource);
             return;
         }
         // pass resource
