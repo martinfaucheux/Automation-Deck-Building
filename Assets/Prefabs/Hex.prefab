@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 4260715490377486932}
   - component: {fileID: 5414130849997373393}
   - component: {fileID: 1355602745332631423}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Hex
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -96,9 +96,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   material: {fileID: 2100000, guid: 74aabdb1e526c38458136aa39d9f9646, type: 2}
-  innerSize: 0.8
+  innerSize: 0.9
   outerSize: 1
-  height: 0
+  height: 100
   coordinates: {x: 0, y: 0}
   _labelText: {fileID: 6885036157541702840}
 --- !u!1 &7042824862455063860

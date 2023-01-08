@@ -2,14 +2,13 @@
 using UnityEngine;
 using UnityEditor;
 
-[CustomEditor(typeof(Belt))]
-public class BeltCustomEditor : Editor
+public class ResourceHolderCustomEditor : Editor
 {
-    private Belt t;
+    private ResourceHolder t;
 
     private void OnEnable()
     {
-        t = target as Belt;
+        t = target as ResourceHolder;
     }
 
     public override void OnInspectorGUI()
@@ -25,3 +24,10 @@ public class BeltCustomEditor : Editor
         }
     }
 }
+
+[CustomEditor(typeof(Belt))]
+public class BeltCustomEditor : ResourceHolderCustomEditor { }
+
+
+[CustomEditor(typeof(ResourceProducer))]
+public class ResourceProducerCustomEditor : ResourceHolderCustomEditor { }

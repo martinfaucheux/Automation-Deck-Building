@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using DirectionEnum;
 using System.Linq;
-public class ResourceHolder : MonoBehaviour
+public abstract class ResourceHolder : MonoBehaviour
 {
     [Tooltip("When building belt systems, indicate whether this belt has been treated")]
     public bool isDirty = true;
@@ -11,59 +11,91 @@ public class ResourceHolder : MonoBehaviour
     // Marked as true if the resource should move at the end of processing.
     public bool willFlush { get; private set; } = false;
 
-    [SerializeField] Direction _direction;
-    [SerializeField] HexCollider _collider;
-    private Resource _heldResource;
-    public Vector2Int position { get => _collider.position; }
+    [SerializeField] protected Direction _direction;
+    [SerializeField] protected Resource _heldResource;
+    private Resource _cachedHeldResource;
+    public HexCollider hexCollider;
+    public Vector2Int position { get => hexCollider.position; }
 
     void Start()
     {
-        BeltManager.instance.AddBelt(this);
+        BeltManager.instance.AddHolder(this);
     }
 
     void OnDestroy()
     {
-        BeltManager.instance.RemoveBelt(this);
+        BeltManager.instance.RemoveHolder(this);
     }
 
+    // Method run on BeltManager tick before distributing the resource
+    public abstract void OnTick();
+
+    public abstract bool IsAllowedToReceive();
+    public abstract bool IsAllowedToGive();
+    public abstract bool IsAllowedToReceive(ResourceHolder resourceHolder);
 
     public void SetHeldResource(Resource resource) => _heldResource = resource;
 
-    public List<(Direction, ResourceHolder)> GetNeighbors()
+
+    public void ResetWillFlush()
     {
-        List<(Direction, ResourceHolder)> neighbors = new List<(Direction, ResourceHolder)>();
+        _cachedHeldResource = _heldResource;
+        _heldResource = null;
+        willFlush = false;
+    }
+
+    public List<ResourceHolder> GetNeighbors()
+    {
+        List<ResourceHolder> neighbors = new List<ResourceHolder>();
         foreach (Direction direction in EnumUtil.GetValues<Direction>())
         {
             if (direction == Direction.NONE)
                 continue;
 
             Vector2Int checkPosition = position + direction.ToHexPosition();
-            ResourceHolder resourceHolder = BeltManager.instance.GetBeltAtPos(checkPosition);
+            ResourceHolder resourceHolder = BeltManager.instance.GetHolderAtPos(checkPosition);
             if (resourceHolder != null)
-                neighbors.Add((direction, resourceHolder));
+                neighbors.Add(resourceHolder);
         }
         return neighbors;
     }
 
     public Vector2Int GetTargetPos() => position + _direction.ToHexPosition();
-    public ResourceHolder GetTargetBelt() => BeltManager.instance.GetBeltAtPos(GetTargetPos());
+    public ResourceHolder GetTargetHolder() => BeltManager.instance.GetHolderAtPos(GetTargetPos());
 
-    public void ResetWillFlush() => willFlush = false;
-
+    // <summary>
+    // Update willFlush i.e. whether this holder will be able to pass its resource
+    // </summary>
     public void UpdateWillFlush()
     {
-        // check if target position has a belt
-        ResourceHolder targetHolder = GetTargetBelt();
+        if (_cachedHeldResource == null)
+        {
+            willFlush = false;
+            return;
+        }
+
+        // check if target position has a valid ResourceHolder
+        ResourceHolder targetHolder = GetTargetHolder();
         if (targetHolder != null)
         {
+
+            // if target already has a resource and is stuck, this can't flush
+            if (targetHolder._cachedHeldResource != null && !targetHolder.willFlush)
+            {
+                willFlush = false;
+                return;
+            }
+
+            // check if another holder already chose to flush to target
             willFlush = !(
-                GetNeighbors()
-                // get only belts pointing toward target
-                .Where(tuple => tuple.Item1.Opposite() == tuple.Item2._direction)
-                // remove direction
-                .Select(tuple => tuple.Item2)
-                // filter only the one that will flush a resource
-                .Where(resourceHolder => resourceHolder.willFlush && resourceHolder._heldResource != null)
+                targetHolder.GetNeighbors()
+                .Where(neighborOfTargetHolder => (
+                    // check only neighbor of targets that have the right to flush to target
+                    targetHolder.IsAllowedToReceive(neighborOfTargetHolder)
+                    // filter only the one that will flush a resource
+                    && neighborOfTargetHolder.willFlush
+                    && neighborOfTargetHolder._heldResource != null
+                ))
                 .Any()
             );
         }
@@ -73,22 +105,24 @@ public class ResourceHolder : MonoBehaviour
         }
     }
 
-    public void Flush() => StartCoroutine(FlushCoroutine());
-
-    private IEnumerator FlushCoroutine()
+    public void Flush()
     {
-        Resource initialHeldResource = _heldResource;
-        _heldResource = null;
-
-        // wait end of frame to make sure each initial resource has been cached
-        yield return new WaitForEndOfFrame();
-
+        if (!willFlush)
+        {
+            SetHeldResource(_cachedHeldResource);
+            return;
+        }
         // pass resource
-        ResourceHolder targetHolder = GetTargetBelt();
-        targetHolder._heldResource = initialHeldResource;
+        ResourceHolder targetHolder = GetTargetHolder();
+        if (targetHolder == null)
+            Debug.LogError("targetHolder should never be null", gameObject);
 
-        if (initialHeldResource != null)
-            initialHeldResource.Move(targetHolder.position);
+        if (_cachedHeldResource != null)
+        {
+            _cachedHeldResource.SetHolder(targetHolder);
+            targetHolder.SetHeldResource(_cachedHeldResource);
+            _cachedHeldResource.Move(targetHolder.position);
+        }
     }
 
     private void CleanRotation()

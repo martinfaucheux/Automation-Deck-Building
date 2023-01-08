@@ -17,36 +17,7 @@ namespace DirectionEnum
 
         public static Vector2Int ToHexPosition(this Direction direction)
         {
-            int x = 0;
-            int y = 0;
-            switch (direction)
-            {
-                case Direction.NONE:
-                    break;
-                case Direction.NE:
-                    x = 1;
-                    y = 1;
-                    break;
-                case Direction.N:
-                    y = 2;
-                    break;
-                case Direction.NO:
-                    x = -1;
-                    y = 1;
-                    break;
-                case Direction.SO:
-                    x = -1;
-                    y = -1;
-                    break;
-                case Direction.S:
-                    y = -2;
-                    break;
-                case Direction.SE:
-                    x = 1;
-                    y = -1;
-                    break;
-            }
-            return new Vector2Int(x, y);
+            return DirectionUtil.positionMap[direction];
         }
 
         public static Direction Opposite(this Direction direction)
@@ -58,6 +29,29 @@ namespace DirectionEnum
     }
 
     public enum Direction { NE = 0, N = 1, NO = 2, SO = 3, S = 4, SE = 5, NONE = 6 };
+
+    public static class DirectionUtil
+    {
+        public static readonly Dictionary<Direction, Vector2Int> positionMap = new Dictionary<Direction, Vector2Int>{
+            {Direction.NONE, new Vector2Int(0,0)},
+            {Direction.NE, new Vector2Int(1, 1)},
+            {Direction.N, new Vector2Int(0,2)},
+            {Direction.NO, new Vector2Int(-1,1)},
+            {Direction.SO, new Vector2Int(-1,-1)},
+            {Direction.S, new Vector2Int(0,-2)},
+            {Direction.SE, new Vector2Int(1,-1)},
+        };
+
+        public static Direction? GetDirectionFromPosition(Vector2Int positionDiff)
+        {
+            foreach (Direction direction in EnumUtil.GetValues<Direction>())
+            {
+                if (direction.ToHexPosition() == positionDiff)
+                    return direction;
+            }
+            return null;
+        }
+    }
 
     public static class EnumUtil
     {

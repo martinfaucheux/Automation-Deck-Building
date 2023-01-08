@@ -18,28 +18,48 @@ public class BeltSystem : MonoBehaviour
         BeltManager.instance.onTick -= OnTick;
     }
 
-    public void AddBelt(ResourceHolder resourceHolder, int index = 0)
+    public int AddHolder(ResourceHolder resourceHolder, int index = 0)
     {
         _resourceHolders.Insert(index, resourceHolder);
         resourceHolder.isDirty = false;
 
-        foreach ((Direction direction, ResourceHolder neighborHolder) in resourceHolder.GetNeighbors())
+        int shiftCount = 0;
+        foreach (ResourceHolder neighborHolder in resourceHolder.GetNeighbors())
         {
             if (neighborHolder.isDirty)
             {
-                // if neighbor is target of belt, it should be come before in the list
-                if (resourceHolder.GetTargetPos() == neighborHolder.position)
-                    AddBelt(neighborHolder, index);
+                // if neighbor is target of the holder, it should be come before in the list
+                if (
+                    resourceHolder.GetTargetPos() == neighborHolder.position
+                    && resourceHolder.IsAllowedToGive()
+                    && neighborHolder.IsAllowedToReceive()
+                )
+                {
+                    int subShiftCount = AddHolder(neighborHolder, index);
+                    index += subShiftCount + 1;
+                    shiftCount += subShiftCount + 1;
+                }
 
                 // if belt is target of neighbor, the belt should come before.
-                else if (resourceHolder.position == neighborHolder.GetTargetPos())
-                    AddBelt(neighborHolder, index + 1);
+                else if (
+                    resourceHolder.position == neighborHolder.GetTargetPos()
+                    && neighborHolder.IsAllowedToGive()
+                    && resourceHolder.IsAllowedToReceive()
+                )
+                {
+                    int subShiftCount = AddHolder(neighborHolder, index + 1);
+                    shiftCount += subShiftCount + 1;
+                }
             }
         }
+        return shiftCount;
     }
 
     private void OnTick()
     {
+        foreach (ResourceHolder resourceHolder in _resourceHolders)
+            resourceHolder.OnTick();
+
         UpdateWillFlush();
         Move();
     }
@@ -56,7 +76,6 @@ public class BeltSystem : MonoBehaviour
     public void Move()
     {
         foreach (ResourceHolder resourceHolder in _resourceHolders)
-            if (resourceHolder.willFlush)
-                resourceHolder.Flush();
+            resourceHolder.Flush();
     }
 }

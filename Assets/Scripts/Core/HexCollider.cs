@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using DirectionEnum;
 
 public class HexCollider : MonoBehaviour
 {
@@ -22,15 +23,21 @@ public class HexCollider : MonoBehaviour
 
     public void SyncPosition()
     {
-        // TODO: this is invalid, most likely because of GetHexPos
         position = grid.GetHexPos(this.transform.position);
-        Debug.Log("position: " + position.ToString(), gameObject);
     }
+
     public Vector3 GetWorldPos => grid.GetWorldPos(position);
 
     public void AlignOnGrid()
     {
         SyncPosition();
-        transform.position = HexGrid.instance.GetWorldPos(position);
+        Vector3 newPosition = HexGrid.instance.GetWorldPos(position);
+        newPosition.z = transform.position.z;
+        transform.position = newPosition;
+    }
+
+    public Direction? GetNeighborDirection(HexCollider otherCollider)
+    {
+        return DirectionUtil.GetDirectionFromPosition(otherCollider.position - this.position);
     }
 }

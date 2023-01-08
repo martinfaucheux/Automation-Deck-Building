@@ -314,4 +314,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isDirty: 1
   _direction: 0
-  _collider: {fileID: 2632613435689342393}
+  hexCollider: {fileID: 2632613435689342393}

@@ -9,15 +9,15 @@ public class BeltManager : SingletoneBase<BeltManager>
     public float tickPeriod = 0.5f;
     public float moveDuration = 0.1f;
     private float lastTick;
-    private GenericGrid<ResourceHolder> _beltGrid = new GenericGrid<ResourceHolder>();
+    private GenericGrid<ResourceHolder> _holderGrid = new GenericGrid<ResourceHolder>();
     private List<BeltSystem> _beltSystems = new List<BeltSystem>();
 
-    public void AddBelt(ResourceHolder belt) => _beltGrid[belt.position] = belt;
-    public void RemoveBelt(ResourceHolder belt) => _beltGrid.Remove(belt.position);
-    public ResourceHolder GetBeltAtPos(Vector2Int position)
+    public void AddHolder(ResourceHolder holder) => _holderGrid[holder.position] = holder;
+    public void RemoveHolder(ResourceHolder holder) => _holderGrid.Remove(holder.position);
+    public ResourceHolder GetHolderAtPos(Vector2Int position)
     {
-        if (_beltGrid.ContainsKey(position))
-            return _beltGrid[position];
+        if (_holderGrid.ContainsKey(position))
+            return _holderGrid[position];
         return null;
     }
 
@@ -47,16 +47,16 @@ public class BeltManager : SingletoneBase<BeltManager>
     {
         CleanSystems();
 
-        foreach (Belt belt in _beltGrid)
-            belt.isDirty = true;
+        foreach (ResourceHolder resourceHolder in _holderGrid)
+            resourceHolder.isDirty = true;
 
-        foreach (Belt belt in _beltGrid)
+        foreach (ResourceHolder resourceHolder in _holderGrid)
         {
-            if (!belt.isDirty)
+            if (!resourceHolder.isDirty)
                 continue;
 
             BeltSystem system = gameObject.AddComponent<BeltSystem>();
-            system.AddBelt(belt);
+            system.AddHolder(resourceHolder);
             _beltSystems.Add(system);
         }
     }
