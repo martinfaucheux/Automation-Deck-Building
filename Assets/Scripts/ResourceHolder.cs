@@ -11,9 +11,10 @@ public abstract class ResourceHolder : MonoBehaviour
     // Marked as true if the resource should move at the end of processing.
     public bool willFlush { get; private set; } = false;
 
-    [SerializeField] protected Direction _direction;
+    public BeltSystem system;
+    [field: SerializeField] public Direction direction { get; protected set; }
+    private Resource _futureResource;
     [SerializeField] protected Resource _heldResource;
-    private Resource _cachedHeldResource;
     public HexCollider hexCollider;
     public Vector2Int position { get => hexCollider.position; }
 
@@ -32,15 +33,14 @@ public abstract class ResourceHolder : MonoBehaviour
 
     public abstract bool IsAllowedToReceive();
     public abstract bool IsAllowedToGive();
-    public abstract bool IsAllowedToReceive(ResourceHolder resourceHolder);
+    public abstract bool IsAllowedToReceiveFrom(ResourceHolder resourceHolder);
 
     public void SetHeldResource(Resource resource) => _heldResource = resource;
 
 
     public void ResetWillFlush()
     {
-        _cachedHeldResource = _heldResource;
-        _heldResource = null;
+        _futureResource = null;
         willFlush = false;
     }
 
@@ -60,7 +60,7 @@ public abstract class ResourceHolder : MonoBehaviour
         return neighbors;
     }
 
-    public Vector2Int GetTargetPos() => position + _direction.ToHexPosition();
+    public Vector2Int GetTargetPos() => position + direction.ToHexPosition();
     public ResourceHolder GetTargetHolder() => BeltManager.instance.GetHolderAtPos(GetTargetPos());
 
     // <summary>
@@ -68,63 +68,51 @@ public abstract class ResourceHolder : MonoBehaviour
     // </summary>
     public void UpdateWillFlush()
     {
-        if (_cachedHeldResource == null)
-        {
-            willFlush = false;
-            return;
-        }
-
-        // check if target position has a valid ResourceHolder
+        willFlush = false;
         ResourceHolder targetHolder = GetTargetHolder();
-        if (targetHolder != null)
-        {
 
-            // if target already has a resource and is stuck, this can't flush
-            if (targetHolder._cachedHeldResource != null && !targetHolder.willFlush)
+        if (_heldResource != null)
+        {
+            // check if target position has a valid ResourceHolder
+            if (
+                targetHolder != null
+                && targetHolder.IsAllowedToReceiveFrom(this)
+                && targetHolder._futureResource == null
+            )
             {
-                willFlush = false;
-                return;
+                targetHolder._futureResource = _heldResource;
+                willFlush = true;
             }
-
-            // check if another holder already chose to flush to target
-            willFlush = !(
-                targetHolder.GetNeighbors()
-                .Where(neighborOfTargetHolder => (
-                    // check only neighbor of targets that have the right to flush to target
-                    targetHolder.IsAllowedToReceive(neighborOfTargetHolder)
-                    // filter only the one that will flush a resource
-                    && neighborOfTargetHolder.willFlush
-                    && neighborOfTargetHolder._heldResource != null
-                ))
-                .Any()
-            );
+            else
+            {
+                _futureResource = _heldResource;
+            }
         }
-        else
-        {
-            willFlush = false;
-        }
+        // if no resource is held, no modification is made
     }
 
     public void Flush()
     {
-        if (!willFlush)
-        {
-            // if _cachedResource is not null, then this might have receive a new resource
-            // in the meantime
-            if (_cachedHeldResource != null)
-                SetHeldResource(_cachedHeldResource);
-            return;
-        }
-        // pass resource
-        ResourceHolder targetHolder = GetTargetHolder();
-        if (targetHolder == null)
-            Debug.LogError("targetHolder should never be null", gameObject);
+        Resource previousResource = _heldResource;
+        _heldResource = _futureResource;
 
-        if (_cachedHeldResource != null)
+        if (willFlush)
         {
-            _cachedHeldResource.SetHolder(targetHolder);
-            targetHolder.SetHeldResource(_cachedHeldResource);
-            _cachedHeldResource.Move(targetHolder.position);
+            // pass resource
+            ResourceHolder targetHolder = GetTargetHolder();
+            if (targetHolder == null)
+                Debug.LogError("targetHolder should never be null", gameObject);
+            else
+            {
+                if (previousResource != null)
+                {
+                    previousResource.Move(targetHolder.position);
+                }
+                else
+                {
+                    Debug.LogError("flushed resource should never be null", gameObject);
+                }
+            }
         }
     }
 
@@ -144,7 +132,7 @@ public abstract class ResourceHolder : MonoBehaviour
         if (angle % 60 == 0)
         {
             int angleId = (angle / 60) % 6;
-            _direction = (Direction)angleId;
+            direction = (Direction)angleId;
         }
         else
         {

@@ -7,12 +7,12 @@ public class Belt : ResourceHolder
     public override void OnTick() { }
     public override bool IsAllowedToReceive() => true;
     public override bool IsAllowedToGive() => true;
-    public override bool IsAllowedToReceive(ResourceHolder resourceHolder)
+    public override bool IsAllowedToReceiveFrom(ResourceHolder resourceHolder)
     {
-        Direction? otherDirection = hexCollider.GetNeighborDirection(resourceHolder.hexCollider);
-        if (otherDirection == null)
+        Direction? directionToOther = hexCollider.GetNeighborDirection(resourceHolder.hexCollider);
+        if (directionToOther == null)
             return false;
 
-        return (this._direction.Opposite() == otherDirection);
+        return (resourceHolder.direction.Opposite() == directionToOther);
     }
 }

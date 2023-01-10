@@ -21,6 +21,7 @@ public class BeltSystem : MonoBehaviour
     public int AddHolder(ResourceHolder resourceHolder, int index = 0)
     {
         _resourceHolders.Insert(index, resourceHolder);
+        resourceHolder.system = this;
         resourceHolder.isDirty = false;
 
         int shiftCount = 0;
@@ -50,6 +51,11 @@ public class BeltSystem : MonoBehaviour
                     int subShiftCount = AddHolder(neighborHolder, index + 1);
                     shiftCount += subShiftCount + 1;
                 }
+            }
+            else if (neighborHolder.system == this)
+            {
+                // THIS IS A LOOP
+                // all holders in the loop path must be placed at the head of the list
             }
         }
         return shiftCount;

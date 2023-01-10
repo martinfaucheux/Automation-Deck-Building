@@ -14,7 +14,7 @@ public class ResourceProducer : ResourceHolder
     // Generally, does this ResourceHolder have the right to deliver any resource
     public override bool IsAllowedToGive() => true;
 
-    public override bool IsAllowedToReceive(ResourceHolder resourceHolder) => false;
+    public override bool IsAllowedToReceiveFrom(ResourceHolder resourceHolder) => false;
 
     public override void OnTick()
     {
