@@ -23,17 +23,31 @@ public class BeltSystem : MonoBehaviour
         resourceHolder.system = this;
         resourceHolder.isDirty = false;
 
-        ResourceHolder targetHolder = resourceHolder.GetTargetHolder();
-        if (targetHolder != null && targetHolder.isDirty)
+        if (resourceHolder.IsAllowedToGive())
         {
-            AddHolder(targetHolder, false);
+            ResourceHolder targetHolder = resourceHolder.GetTargetHolder();
+            if (
+                targetHolder != null
+                && targetHolder.IsAllowedToReceiveFrom(resourceHolder)
+                && targetHolder.isDirty
+            )
+            {
+                AddHolder(targetHolder, false);
+            }
         }
 
-        foreach (ResourceHolder neighborHolder in resourceHolder.GetNeighbors())
+        if (resourceHolder.IsAllowedToReceive())
         {
-            if ((neighborHolder.GetTargetHolder() == resourceHolder) && neighborHolder.isDirty)
+            foreach (ResourceHolder neighborHolder in resourceHolder.GetNeighbors())
             {
-                AddHolder(neighborHolder, true);
+                if (
+                    (neighborHolder.GetTargetHolder() == resourceHolder)
+                    && resourceHolder.IsAllowedToReceiveFrom(neighborHolder)
+                    && neighborHolder.isDirty
+                )
+                {
+                    AddHolder(neighborHolder, true);
+                }
             }
         }
     }

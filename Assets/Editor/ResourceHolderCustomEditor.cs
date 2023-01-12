@@ -1,6 +1,6 @@
 
-using UnityEngine;
 using UnityEditor;
+using UnityEngine;
 
 public class ResourceHolderCustomEditor : Editor
 {
@@ -31,3 +31,6 @@ public class BeltCustomEditor : ResourceHolderCustomEditor { }
 
 [CustomEditor(typeof(ResourceProducer))]
 public class ResourceProducerCustomEditor : ResourceHolderCustomEditor { }
+
+[CustomEditor(typeof(ResourceConsumer))]
+public class ResourceConsumerCustomEditor : ResourceHolderCustomEditor { }
