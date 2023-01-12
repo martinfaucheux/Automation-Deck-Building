@@ -1,8 +1,5 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using System.Linq;
-using DirectionEnum;
 
 public class BeltSystem : MonoBehaviour
 {
@@ -18,47 +15,27 @@ public class BeltSystem : MonoBehaviour
         BeltManager.instance.onTick -= OnTick;
     }
 
-    public int AddHolder(ResourceHolder resourceHolder, int index = 0)
+
+    public void AddHolder(ResourceHolder resourceHolder, bool insertAtTail = false)
     {
-        _resourceHolders.Insert(index, resourceHolder);
+        int insertIndex = insertAtTail ? _resourceHolders.Count : 0;
+        _resourceHolders.Insert(insertIndex, resourceHolder);
         resourceHolder.system = this;
         resourceHolder.isDirty = false;
 
-        int shiftCount = 0;
+        ResourceHolder targetHolder = resourceHolder.GetTargetHolder();
+        if (targetHolder != null && targetHolder.isDirty)
+        {
+            AddHolder(targetHolder, false);
+        }
+
         foreach (ResourceHolder neighborHolder in resourceHolder.GetNeighbors())
         {
-            if (neighborHolder.isDirty)
+            if ((neighborHolder.GetTargetHolder() == resourceHolder) && neighborHolder.isDirty)
             {
-                // if neighbor is target of the holder, it should be come before in the list
-                if (
-                    resourceHolder.GetTargetPos() == neighborHolder.position
-                    && resourceHolder.IsAllowedToGive()
-                    && neighborHolder.IsAllowedToReceive()
-                )
-                {
-                    int subShiftCount = AddHolder(neighborHolder, index);
-                    index += subShiftCount + 1;
-                    shiftCount += subShiftCount + 1;
-                }
-
-                // if belt is target of neighbor, the belt should come before.
-                else if (
-                    resourceHolder.position == neighborHolder.GetTargetPos()
-                    && neighborHolder.IsAllowedToGive()
-                    && resourceHolder.IsAllowedToReceive()
-                )
-                {
-                    int subShiftCount = AddHolder(neighborHolder, index + 1);
-                    shiftCount += subShiftCount + 1;
-                }
-            }
-            else if (neighborHolder.system == this)
-            {
-                // THIS IS A LOOP
-                // all holders in the loop path must be placed at the head of the list
+                AddHolder(neighborHolder, true);
             }
         }
-        return shiftCount;
     }
 
     private void OnTick()
