@@ -1,8 +1,7 @@
-﻿using System.Collections;
+﻿using System;
 using System.Collections.Generic;
-using UnityEngine;
-using System;
 using System.Linq;
+using UnityEngine;
 
 
 // Define an extension method in a non-nested static class.
@@ -24,8 +23,14 @@ namespace DirectionEnum
         {
             if (direction == Direction.NONE)
                 return Direction.NONE;
-            return (Direction)(((int)direction + 3) % 6);
+            return (Direction)(MathUtil.Modulo((int)direction + 3, 6));
         }
+
+        public static int GetAngleTo(this Direction direction, Direction otherDirection)
+        {
+            return MathUtil.Modulo((int)otherDirection - (int)direction, 6) * 60;
+        }
+
     }
 
     public enum Direction { NE = 0, N = 1, NO = 2, SO = 3, S = 4, SE = 5, NONE = 6 };

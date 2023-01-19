@@ -264,6 +264,7 @@ GameObject:
   - component: {fileID: 2632613435689342392}
   - component: {fileID: 2632613435689342393}
   - component: {fileID: 2632613435689342399}
+  - component: {fileID: 6593062431643396317}
   m_Layer: 0
   m_Name: Belt
   m_TagString: Untagged
@@ -313,5 +314,26 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isDirty: 1
-  _direction: 0
+  system: {fileID: 0}
+  <direction>k__BackingField: 0
+  _heldResource: {fileID: 0}
   hexCollider: {fileID: 2632613435689342393}
+--- !u!114 &6593062431643396317
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2632613435689342394}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 96ca9bcb31fd7dd45bc8b5f12171e367, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _belt: {fileID: 2632613435689342399}
+  _prefabSet:
+    straight: {fileID: 56807202874806464, guid: 463dceb04c21bcc44aa538392584bd2a, type: 3}
+    smallTurn: {fileID: 60636008812770953, guid: 02d9605c1bcc50a4aa18b4651b1cf7fd, type: 3}
+    wideTurn: {fileID: 2680738228309555794, guid: f4a428e83e1087a45b282689eb56b95d, type: 3}
+  _height: 0
+  _heightStep: 0.1

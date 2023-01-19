@@ -38,6 +38,7 @@ public class BeltSystem : MonoBehaviour
 
         if (resourceHolder.IsAllowedToReceive())
         {
+            // TODO: use feederOnly
             foreach (ResourceHolder neighborHolder in resourceHolder.GetNeighbors())
             {
                 if (

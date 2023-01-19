@@ -1,8 +1,6 @@
-using System.Collections;
+using DirectionEnum;
 using System.Collections.Generic;
 using UnityEngine;
-using DirectionEnum;
-using System.Linq;
 public abstract class ResourceHolder : MonoBehaviour
 {
     [Tooltip("When building belt systems, indicate whether this belt has been treated")]
@@ -44,7 +42,7 @@ public abstract class ResourceHolder : MonoBehaviour
         willFlush = false;
     }
 
-    public List<ResourceHolder> GetNeighbors()
+    public List<ResourceHolder> GetNeighbors(bool feederOnly = false)
     {
         List<ResourceHolder> neighbors = new List<ResourceHolder>();
         foreach (Direction direction in EnumUtil.GetValues<Direction>())
@@ -54,7 +52,10 @@ public abstract class ResourceHolder : MonoBehaviour
 
             Vector2Int checkPosition = position + direction.ToHexPosition();
             ResourceHolder resourceHolder = BeltManager.instance.GetHolderAtPos(checkPosition);
-            if (resourceHolder != null)
+            if (
+                resourceHolder != null
+                && (!feederOnly || resourceHolder.GetTargetHolder() == this)
+            )
                 neighbors.Add(resourceHolder);
         }
         return neighbors;

@@ -1,0 +1,107 @@
+using DirectionEnum;
+using System;
+using UnityEngine;
+
+
+
+[Serializable]
+public class BeltPrefabSet
+{
+    public GameObject straight;
+    public GameObject smallTurn;
+    public GameObject wideTurn;
+}
+
+
+public class BeltRenderer : MonoBehaviour
+{
+    [SerializeField] Belt _belt;
+    [SerializeField] BeltPrefabSet _prefabSet;
+    [SerializeField] float _height = 0f;
+    [SerializeField] float _heightStep = 0.1f;
+
+    private void Start()
+    {
+        RenderBelts();
+    }
+
+    public void RenderBelts()
+    {
+        ResetSprites();
+        // get belt direcion
+        // get feeders
+        // take the first one
+        // get the prefab with the right angle between 1st feeder and target
+        // inverse sprite if necessary
+
+        // repeat with each feeder but draw below
+
+        float height = _height;
+        foreach (ResourceHolder neighborHolder in _belt.GetNeighbors(feederOnly: true))
+        {
+            DrawBeltLane(neighborHolder.direction, _belt.direction, height);
+            height += _heightStep;
+        }
+
+    }
+
+    private GameObject DrawBeltLane(Direction inputDirection, Direction outputDirection, float height)
+    {
+        int angleDiff = inputDirection.Opposite().GetAngleTo(outputDirection);
+        GameObject prefab = AngleDiffToPrefab(angleDiff);
+
+        GameObject beltGameObject = GameObject.Instantiate(prefab, transform);
+        Vector3 position = transform.position;
+        position.z = height;
+        beltGameObject.transform.position = position;
+
+        bool inverseSprite = angleDiff > 3 * 60;
+        if (inverseSprite)
+        {
+            Vector3 scale = beltGameObject.transform.localScale;
+            scale.y *= -1;
+            beltGameObject.transform.localScale = scale;
+        }
+
+        Quaternion rotation = Quaternion.Euler(0f, 0f, inputDirection.Opposite().ToAngleDegree());
+        beltGameObject.transform.rotation = rotation;
+        return beltGameObject;
+    }
+
+    private void ResetSprites()
+    {
+        for (int childCount = 0; childCount < transform.childCount; childCount++)
+            Destroy(transform.GetChild(0).gameObject);
+    }
+
+    private GameObject AngleDiffToPrefab(int angleDiff)
+    {
+        GameObject prefab = null;
+        switch (angleDiff / 60)
+        {
+            case 0:
+                Debug.LogError("Cannot Draw a U-Turn Belt");
+                return null;
+            case 1:
+                prefab = _prefabSet.smallTurn;
+                break;
+            case 2:
+                prefab = _prefabSet.wideTurn;
+                break;
+            case 3:
+                prefab = _prefabSet.straight;
+                break;
+            case 4:
+                prefab = _prefabSet.wideTurn;
+                break;
+            case 5:
+                prefab = _prefabSet.smallTurn;
+                break;
+            default:
+                Debug.LogError("invalid angle: " + angleDiff.ToString(), gameObject);
+                break;
+        }
+        return prefab;
+    }
+
+}
