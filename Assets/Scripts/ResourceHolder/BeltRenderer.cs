@@ -30,13 +30,6 @@ public class BeltRenderer : ResourceHolderRenderer
     public override void Render()
     {
         ResetSprites();
-        // get belt direcion
-        // get feeders
-        // take the first one
-        // get the prefab with the right angle between 1st feeder and target
-        // inverse sprite if necessary
-
-        // repeat with each feeder but draw below
 
         float height = _height;
         List<ResourceHolder> neighborHolders = _belt.GetNeighbors(feederOnly: true);

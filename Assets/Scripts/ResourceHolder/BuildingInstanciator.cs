@@ -28,11 +28,13 @@ public class BuildingInstanciator : SingletonBase<BuildingInstanciator>
         _resourceHolder = _ghostGameObject.GetComponent<ResourceHolder>();
         if (_resourceHolder == null)
             Debug.LogError("Ghost GameObject should have a ResourceHolder component attached", _buildingPrefab);
+
+        SnapGhostToGrid(instant: true);
     }
 
     public void PlaceGameObject()
     {
-        if (CanPlace())
+        if (_ghostGameObject != null && CanPlace())
         {
             _resourceHolder.Place();
             _ghostGameObject = null;
@@ -51,9 +53,12 @@ public class BuildingInstanciator : SingletonBase<BuildingInstanciator>
 
     public void CancelSelection()
     {
-        Destroy(_ghostGameObject);
-        _ghostGameObject = null;
-        _buildingPrefab = null;
+        if (_ghostGameObject != null)
+        {
+            Destroy(_ghostGameObject);
+            _ghostGameObject = null;
+            _buildingPrefab = null;
+        }
     }
 
     void Update()
@@ -71,7 +76,7 @@ public class BuildingInstanciator : SingletonBase<BuildingInstanciator>
         }
     }
 
-    private void SnapGhostToGrid()
+    private void SnapGhostToGrid(bool instant = false)
     {
         Vector3 screenPosition = Input.mousePosition;
         screenPosition.z = 0;
@@ -82,9 +87,16 @@ public class BuildingInstanciator : SingletonBase<BuildingInstanciator>
 
         Vector3 snappedWorldPosition = _resourceHolder.hexCollider.GetSnappedPosition();
 
-        LeanTween.cancel(_ltAnimId);
-        LTDescr ltDescr = LeanTween.move(_ghostGameObject, snappedWorldPosition, snapAnimDuration);
-        _ltAnimId = ltDescr.id;
+        if (instant)
+        {
+            _ghostGameObject.transform.position = snappedWorldPosition;
+        }
+        else
+        {
+            LeanTween.cancel(_ltAnimId);
+            LTDescr ltDescr = LeanTween.move(_ghostGameObject, snappedWorldPosition, snapAnimDuration);
+            _ltAnimId = ltDescr.id;
+        }
     }
 
     private void Rerender()

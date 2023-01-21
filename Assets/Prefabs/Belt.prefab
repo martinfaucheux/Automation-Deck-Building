@@ -318,7 +318,7 @@ MonoBehaviour:
   system: {fileID: 0}
   <direction>k__BackingField: 0
   _heldResource: {fileID: 0}
-  _renderer: {fileID: 0}
+  _renderer: {fileID: 6593062431643396317}
   hexCollider: {fileID: 2632613435689342393}
 --- !u!114 &6593062431643396317
 MonoBehaviour:
