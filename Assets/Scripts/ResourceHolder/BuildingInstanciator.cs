@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class BuildingInstanciator : SingletonBase<BuildingInstanciator>
 {
@@ -17,7 +18,8 @@ public class BuildingInstanciator : SingletonBase<BuildingInstanciator>
         CreateGhostObject();
     }
 
-    private static readonly int BUTTON_INDEX = 1; // right button
+    private static readonly int PLACE_BUTTON = 0; // left button
+    private static readonly int CANCEL_BUTTON = 1; // right button
 
     public void CreateGhostObject()
     {
@@ -32,7 +34,7 @@ public class BuildingInstanciator : SingletonBase<BuildingInstanciator>
     {
         if (CanPlace())
         {
-            _resourceHolder.Initialize();
+            _resourceHolder.Place();
             _ghostGameObject = null;
             _resourceHolder = null;
 
@@ -56,7 +58,10 @@ public class BuildingInstanciator : SingletonBase<BuildingInstanciator>
 
     void Update()
     {
-        if (Input.GetMouseButtonDown(BUTTON_INDEX))
+        if (Input.GetMouseButtonDown(PLACE_BUTTON) && IsNotClickingUI())
+            PlaceGameObject();
+
+        else if (Input.GetMouseButtonDown(CANCEL_BUTTON) && IsNotClickingUI())
             CancelSelection();
 
         if (_ghostGameObject != null)
@@ -90,5 +95,14 @@ public class BuildingInstanciator : SingletonBase<BuildingInstanciator>
             _lastPosition = _resourceHolder.hexCollider.position;
             _resourceHolder.Render();
         }
+    }
+
+    private bool IsNotClickingUI()
+    {
+        return (
+
+            EventSystem.current != null &&
+            !EventSystem.current.IsPointerOverGameObject()
+        );
     }
 }

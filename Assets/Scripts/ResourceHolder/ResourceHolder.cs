@@ -22,6 +22,13 @@ public abstract class ResourceHolder : MonoBehaviour
         BeltManager.instance.AddHolder(this, recalculate_system);
     }
 
+    public void Place()
+    {
+        Initialize(true);
+        foreach (ResourceHolder neighborHolder in GetNeighbors())
+            neighborHolder.Render();
+    }
+
     void OnDestroy()
     {
         BeltManager.instance.RemoveHolder(this);
