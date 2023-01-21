@@ -1,6 +1,6 @@
 
-using UnityEngine;
 using UnityEditor;
+using UnityEngine;
 
 [CustomEditor(typeof(HexGrid))]
 public class HexGridCustomEditor : Editor
@@ -31,8 +31,8 @@ public class HexGridCustomEditor : Editor
 
     private void ClearHex()
     {
-        for (int i = t.transform.childCount; i > 0; --i)
-            DestroyImmediate(t.transform.GetChild(0).gameObject);
+        for (int i = t.hexGridMeshContainer.childCount; i > 0; --i)
+            DestroyImmediate(t.hexGridMeshContainer.GetChild(0).gameObject);
     }
 
     public void LayoutGrid()
@@ -47,7 +47,7 @@ public class HexGridCustomEditor : Editor
                 else
                     coordinates = new Vector2Int(x, 2 * y + 1);
 
-                GameObject tile = (GameObject)PrefabUtility.InstantiatePrefab(t.hexPrefab, t.transform);
+                GameObject tile = (GameObject)PrefabUtility.InstantiatePrefab(t.hexPrefab, t.hexGridMeshContainer);
                 tile.name = $"Hex {coordinates.x},{coordinates.y}";
 
                 tile.transform.position = HexGrid.instance.GetWorldPos(coordinates);

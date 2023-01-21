@@ -12,6 +12,7 @@ public class HexGrid : SingletonBase<HexGrid>
     [Header("Hex rendering")]
     public GameObject hexPrefab;
     public float lineThickness = 0.2f;
+    public Transform hexGridMeshContainer;
 
     // Size in world coordinates of the bounding box of the hexGrid
     public Vector2 worldSize
