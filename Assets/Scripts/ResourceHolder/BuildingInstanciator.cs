@@ -10,7 +10,7 @@ public class BuildingInstanciator : SingletonBase<BuildingInstanciator>
     private ResourceHolder _resourceHolder;
     private Vector2 _lastPosition;
     private float snapAnimDuration = 0.03f;
-    private int _ltAnimId;
+    private int _ltSnapAnimId;
 
     public void SetBuildingPrefab(GameObject buildingPrefab)
     {
@@ -69,6 +69,9 @@ public class BuildingInstanciator : SingletonBase<BuildingInstanciator>
         else if (Input.GetMouseButtonDown(CANCEL_BUTTON) && IsNotClickingUI())
             CancelSelection();
 
+        else if (Input.GetKeyDown(KeyCode.R))
+            Rotate();
+
         if (_ghostGameObject != null)
         {
             SnapGhostToGrid();
@@ -93,9 +96,9 @@ public class BuildingInstanciator : SingletonBase<BuildingInstanciator>
         }
         else
         {
-            LeanTween.cancel(_ltAnimId);
+            LeanTween.cancel(_ltSnapAnimId);
             LTDescr ltDescr = LeanTween.move(_ghostGameObject, snappedWorldPosition, snapAnimDuration);
-            _ltAnimId = ltDescr.id;
+            _ltSnapAnimId = ltDescr.id;
         }
     }
 
@@ -116,5 +119,14 @@ public class BuildingInstanciator : SingletonBase<BuildingInstanciator>
             EventSystem.current != null &&
             !EventSystem.current.IsPointerOverGameObject()
         );
+    }
+
+    private void Rotate()
+    {
+        if (_ghostGameObject != null)
+        {
+            _resourceHolder.transform.Rotate(new Vector3(0, 0, 60));
+            _resourceHolder.InferDirection();
+        }
     }
 }

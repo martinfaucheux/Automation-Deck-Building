@@ -10,7 +10,7 @@ public abstract class ResourceHolder : MonoBehaviour
     public bool willFlush { get; private set; } = false;
 
     public BeltSystem system;
-    [field: SerializeField] public Direction direction { get; protected set; }
+    public Direction direction;
     private Resource _futureResource;
     [SerializeField] protected Resource _heldResource;
     [SerializeField] protected ResourceHolderRenderer _renderer;
@@ -24,6 +24,7 @@ public abstract class ResourceHolder : MonoBehaviour
 
     public void Place()
     {
+        InferDirection();
         Initialize(true);
         foreach (ResourceHolder neighborHolder in GetNeighbors())
             neighborHolder.Render();

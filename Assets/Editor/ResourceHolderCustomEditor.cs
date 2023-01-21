@@ -22,6 +22,18 @@ public class ResourceHolderCustomEditor : Editor
             EditorUtility.SetDirty(t.gameObject);
             PrefabUtility.RecordPrefabInstancePropertyModifications(t);
         }
+
+        if (GUILayout.Button("Infer all directions"))
+        {
+            foreach (ResourceHolder resourceHolder in FindObjectsOfType<ResourceHolder>())
+            {
+                EditorUtility.SetDirty(resourceHolder.gameObject);
+                PrefabUtility.RecordPrefabInstancePropertyModifications(resourceHolder);
+                resourceHolder.InferDirection();
+            }
+        }
+
+
     }
 }
 

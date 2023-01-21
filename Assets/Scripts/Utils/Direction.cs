@@ -31,6 +31,11 @@ namespace DirectionEnum
             return MathUtil.Modulo((int)otherDirection - (int)direction, 6) * 60;
         }
 
+        public static Direction Rotate(this Direction direction, int incr = 1)
+        {
+            return (Direction)(MathUtil.Modulo((int)direction + incr, 6));
+        }
+
     }
 
     public enum Direction { NE = 0, N = 1, NO = 2, SO = 3, S = 4, SE = 5, NONE = 6 };
