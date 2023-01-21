@@ -8,6 +8,8 @@ public class BuildingInstanciator : SingletonBase<BuildingInstanciator>
 
     private ResourceHolder _resourceHolder;
     private Vector2 _lastPosition;
+    private float snapAnimDuration = 0.03f;
+    private int _ltAnimId;
 
     public void SetBuildingPrefab(GameObject buildingPrefab)
     {
@@ -69,8 +71,15 @@ public class BuildingInstanciator : SingletonBase<BuildingInstanciator>
         Vector3 screenPosition = Input.mousePosition;
         screenPosition.z = 0;
         Vector3 worldPosition = Camera.main.ScreenToWorldPoint(screenPosition);
-        _ghostGameObject.transform.position = worldPosition;
-        _resourceHolder.hexCollider.AlignOnGrid();
+
+        Vector2Int hexPosition = HexGrid.instance.GetHexPos(worldPosition);
+        _resourceHolder.hexCollider.position = hexPosition;
+
+        Vector3 snappedWorldPosition = _resourceHolder.hexCollider.GetSnappedPosition();
+
+        LeanTween.cancel(_ltAnimId);
+        LTDescr ltDescr = LeanTween.move(_ghostGameObject, snappedWorldPosition, snapAnimDuration);
+        _ltAnimId = ltDescr.id;
     }
 
     private void Rerender()
