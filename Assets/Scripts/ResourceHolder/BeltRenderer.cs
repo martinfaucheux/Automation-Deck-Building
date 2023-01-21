@@ -1,5 +1,7 @@
 using DirectionEnum;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 
@@ -13,7 +15,7 @@ public class BeltPrefabSet
 }
 
 
-public class BeltRenderer : MonoBehaviour
+public class BeltRenderer : ResourceHolderRenderer
 {
     [SerializeField] Belt _belt;
     [SerializeField] BeltPrefabSet _prefabSet;
@@ -22,10 +24,10 @@ public class BeltRenderer : MonoBehaviour
 
     private void Start()
     {
-        RenderBelts();
+        Render();
     }
 
-    public void RenderBelts()
+    public override void Render()
     {
         ResetSprites();
         // get belt direcion
@@ -37,10 +39,18 @@ public class BeltRenderer : MonoBehaviour
         // repeat with each feeder but draw below
 
         float height = _height;
-        foreach (ResourceHolder neighborHolder in _belt.GetNeighbors(feederOnly: true))
+        List<ResourceHolder> neighborHolders = _belt.GetNeighbors(feederOnly: true);
+        if (neighborHolders.Any())
         {
-            DrawBeltLane(neighborHolder.direction, _belt.direction, height);
-            height += _heightStep;
+            foreach (ResourceHolder neighborHolder in neighborHolders)
+            {
+                DrawBeltLane(neighborHolder.direction, _belt.direction, height);
+                height += _heightStep;
+            }
+        }
+        else
+        {
+            DrawBeltLane(_belt.direction, _belt.direction, height);
         }
 
     }

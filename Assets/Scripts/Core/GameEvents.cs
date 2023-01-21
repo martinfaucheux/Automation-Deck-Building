@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-public class GameEvents : SingletoneBase<GameEvents>
+public class GameEvents : SingletonBase<GameEvents>
 {
     // public event Action<int, int, int> onHealthChange;
 

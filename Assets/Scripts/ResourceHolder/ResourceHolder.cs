@@ -13,12 +13,13 @@ public abstract class ResourceHolder : MonoBehaviour
     [field: SerializeField] public Direction direction { get; protected set; }
     private Resource _futureResource;
     [SerializeField] protected Resource _heldResource;
+    [SerializeField] protected ResourceHolderRenderer _renderer;
     public HexCollider hexCollider;
     public Vector2Int position { get => hexCollider.position; }
 
-    void Start()
+    public void Initialize(bool recalculate_system = true)
     {
-        BeltManager.instance.AddHolder(this);
+        BeltManager.instance.AddHolder(this, recalculate_system);
     }
 
     void OnDestroy()
@@ -28,12 +29,13 @@ public abstract class ResourceHolder : MonoBehaviour
 
     // Method run on BeltManager tick before distributing the resource
     public abstract void OnTick();
-
     public abstract bool IsAllowedToReceive();
     public abstract bool IsAllowedToGive();
     public abstract bool IsAllowedToReceiveFrom(ResourceHolder resourceHolder);
 
     public void SetHeldResource(Resource resource) => _heldResource = resource;
+
+
 
 
     public void ResetWillFlush()
@@ -140,4 +142,6 @@ public abstract class ResourceHolder : MonoBehaviour
             Debug.LogError("Invalid angle, must be a mulitple of 60");
         }
     }
+
+    public virtual void Render() => _renderer?.Render();
 }

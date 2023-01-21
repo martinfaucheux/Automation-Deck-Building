@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class SingletoneBase<T> : MonoBehaviour
+public class SingletonBase<T> : MonoBehaviour
     where T : MonoBehaviour
 {
     /// <summary>

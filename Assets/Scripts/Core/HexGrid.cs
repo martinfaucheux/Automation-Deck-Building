@@ -4,7 +4,7 @@ using UnityEngine;
 using DirectionEnum;
 
 [ExecuteInEditMode]
-public class HexGrid : SingletoneBase<HexGrid>
+public class HexGrid : SingletonBase<HexGrid>
 {
     [Header("Grid param")]
     public Vector2Int gridSize;

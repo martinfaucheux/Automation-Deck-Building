@@ -19,7 +19,7 @@ public class BeltRendererCustomEditor : Editor
 
         if (GUILayout.Button("Render"))
         {
-            t.RenderBelts();
+            t.Render();
         }
     }
 }
