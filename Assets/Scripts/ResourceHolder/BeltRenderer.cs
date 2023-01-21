@@ -108,7 +108,7 @@ public class BeltRenderer : ResourceHolderRenderer
                 prefab = _prefabSet.smallTurn;
                 break;
             default:
-                Debug.LogError("invalid angle: " + angleDiff.ToString(), gameObject);
+                prefab = _prefabSet.straight; ;
                 break;
         }
         return prefab;

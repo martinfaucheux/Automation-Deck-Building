@@ -35,9 +35,6 @@ public abstract class ResourceHolder : MonoBehaviour
 
     public void SetHeldResource(Resource resource) => _heldResource = resource;
 
-
-
-
     public void ResetWillFlush()
     {
         _futureResource = null;
