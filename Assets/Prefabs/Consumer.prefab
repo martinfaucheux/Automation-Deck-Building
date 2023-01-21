@@ -63,6 +63,7 @@ MonoBehaviour:
   system: {fileID: 0}
   <direction>k__BackingField: 0
   _heldResource: {fileID: 0}
+  _renderer: {fileID: 0}
   hexCollider: {fileID: 3432134716380069083}
 --- !u!1 &3432134717465257799
 GameObject:
@@ -181,7 +182,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 180}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -0.33}
+  m_AnchoredPosition: {x: -0, y: 0.27}
   m_SizeDelta: {x: 20, y: 5}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!23 &3432134717857567282
