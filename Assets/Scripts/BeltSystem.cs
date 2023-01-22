@@ -43,6 +43,8 @@ public class BeltSystem : MonoBehaviour
             {
                 if (
                     (neighborHolder.GetTargetHolder() == resourceHolder)
+                    // TODO: IsAllowedToReceiveFrom should be used only to check resource compatibility at runtime
+                    // need to implement a new abstract method if we want to check building geometry compatibility
                     && resourceHolder.IsAllowedToReceiveFrom(neighborHolder)
                     && neighborHolder.isDirty
                 )

@@ -1,12 +1,10 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using DirectionEnum;
 
 public class ResourceProducer : ResourceHolder
 {
     [SerializeField] GameObject _resourcePrefab;
     [SerializeField] float _initialResourceZ = -0.2f;
+    [SerializeField] ResourceType _resourceType;
 
     // Generally, does this ResourceHolder have the right to receive any resource
     public override bool IsAllowedToReceive() => false;
@@ -18,13 +16,15 @@ public class ResourceProducer : ResourceHolder
 
     public override void OnTick()
     {
-        if (_heldResource == null)
+        if (heldResource == null)
         {
             Vector3 position = this.transform.position;
             position.z = _initialResourceZ;
 
-            GameObject resourceObject = Instantiate(_resourcePrefab, position, Quaternion.identity);
-            _heldResource = resourceObject.GetComponent<Resource>();
+            GameObject resourceGameObject = Instantiate(_resourcePrefab, position, Quaternion.identity);
+            ResourceObject resourceComponent = resourceGameObject.GetComponent<ResourceObject>();
+            resourceComponent.SetType(_resourceType);
+            heldResource = resourceComponent;
         }
     }
 }

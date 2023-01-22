@@ -11,8 +11,8 @@ public abstract class ResourceHolder : MonoBehaviour
 
     public BeltSystem system;
     public Direction direction;
-    private Resource _futureResource;
-    [SerializeField] protected Resource _heldResource;
+    private ResourceObject _futureResource;
+    [field: SerializeField] public ResourceObject heldResource { get; protected set; }
     [SerializeField] protected ResourceHolderRenderer _renderer;
     public HexCollider hexCollider;
     public Vector2Int position { get => hexCollider.position; }
@@ -41,7 +41,7 @@ public abstract class ResourceHolder : MonoBehaviour
     public abstract bool IsAllowedToGive();
     public abstract bool IsAllowedToReceiveFrom(ResourceHolder resourceHolder);
 
-    public void SetHeldResource(Resource resource) => _heldResource = resource;
+    public void SetHeldResource(ResourceObject resource) => heldResource = resource;
 
     public void ResetWillFlush()
     {
@@ -79,7 +79,7 @@ public abstract class ResourceHolder : MonoBehaviour
         willFlush = false;
         ResourceHolder targetHolder = GetTargetHolder();
 
-        if (_heldResource != null)
+        if (heldResource != null)
         {
             // check if target position has a valid ResourceHolder
             if (
@@ -88,12 +88,12 @@ public abstract class ResourceHolder : MonoBehaviour
                 && targetHolder._futureResource == null
             )
             {
-                targetHolder._futureResource = _heldResource;
+                targetHolder._futureResource = heldResource;
                 willFlush = true;
             }
             else
             {
-                _futureResource = _heldResource;
+                _futureResource = heldResource;
             }
         }
         // if no resource is held, no modification is made
@@ -101,8 +101,8 @@ public abstract class ResourceHolder : MonoBehaviour
 
     public void Flush()
     {
-        Resource previousResource = _heldResource;
-        _heldResource = _futureResource;
+        ResourceObject previousResource = heldResource;
+        heldResource = _futureResource;
 
         if (willFlush)
         {

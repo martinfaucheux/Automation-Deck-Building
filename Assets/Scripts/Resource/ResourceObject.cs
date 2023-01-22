@@ -1,12 +1,11 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(HexCollider))]
-public class Resource : MonoBehaviour
+public class ResourceObject : MonoBehaviour
 {
     [SerializeField] HexCollider _hexCollider;
     [SerializeField] ResourceHolder _resourceHolder;
+    [field: SerializeField] public ResourceType resourceType { get; private set; }
 
     void Start()
     {
@@ -41,5 +40,11 @@ public class Resource : MonoBehaviour
             targetPosition,
             BeltManager.instance.moveDuration
         );
+    }
+
+    public void SetType(ResourceType resourceType)
+    {
+        this.resourceType = resourceType;
+        // TODO: show sprite of the resourceType
     }
 }

@@ -8,10 +8,10 @@ public class ResourceConsumer : ResourceHolder
 
     public override void OnTick()
     {
-        if (_heldResource != null)
+        if (heldResource != null)
         {
-            Destroy(_heldResource.gameObject);
-            _heldResource = null;
+            Destroy(heldResource.gameObject);
+            heldResource = null;
         }
     }
 }
