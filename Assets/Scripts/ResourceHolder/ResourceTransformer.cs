@@ -13,7 +13,6 @@ public class ResourceTransformer : ResourceHolder
     private Dictionary<ResourceType, int> _storedResources = new Dictionary<ResourceType, int>();
     [SerializeField] int maxStoredResources = 10;
     [SerializeField] GameObject _resourcePrefab;
-    [SerializeField] float _initialResourceZ = -0.2f;
 
     private void Start()
     {
@@ -106,7 +105,7 @@ public class ResourceTransformer : ResourceHolder
 
                     // TODO: mutualize this with resource producer
                     Vector3 position = this.transform.position;
-                    position.z = _initialResourceZ;
+                    position.z = HexLayerUtil.GetHeight(HexLayer.CONTAINED);
 
                     GameObject resourceGameObject = Instantiate(_resourcePrefab, position, Quaternion.identity);
                     ResourceObject resourceComponent = resourceGameObject.GetComponent<ResourceObject>();

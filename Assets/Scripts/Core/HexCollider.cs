@@ -21,8 +21,7 @@ public class HexCollider : MonoBehaviour
 
     public Vector3 GetSnappedPosition()
     {
-        Vector3 snappedPosition = HexGrid.instance.GetWorldPos(position);
-        snappedPosition.z = transform.position.z;
+        Vector3 snappedPosition = grid.GetWorldPos(position, layer);
         return snappedPosition;
     }
 
@@ -30,8 +29,6 @@ public class HexCollider : MonoBehaviour
     {
         position = grid.GetHexPos(this.transform.position);
     }
-
-    public Vector3 GetWorldPos => grid.GetWorldPos(position);
 
     public void AlignOnGrid()
     {

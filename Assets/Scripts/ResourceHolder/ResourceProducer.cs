@@ -3,7 +3,6 @@ using UnityEngine;
 public class ResourceProducer : ResourceHolder
 {
     [SerializeField] GameObject _resourcePrefab;
-    [SerializeField] float _initialResourceZ = -0.2f;
     [SerializeField] ResourceType _resourceType;
 
     // Generally, does this ResourceHolder have the right to receive any resource
@@ -19,7 +18,7 @@ public class ResourceProducer : ResourceHolder
         if (heldResource == null)
         {
             Vector3 position = this.transform.position;
-            position.z = _initialResourceZ;
+            position.z = HexLayerUtil.GetHeight(HexLayer.CONTAINED);
 
             GameObject resourceGameObject = Instantiate(_resourcePrefab, position, Quaternion.identity);
             ResourceObject resourceComponent = resourceGameObject.GetComponent<ResourceObject>();

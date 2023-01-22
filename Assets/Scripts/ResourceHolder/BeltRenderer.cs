@@ -19,7 +19,6 @@ public class BeltRenderer : ResourceHolderRenderer
 {
     [SerializeField] Belt _belt;
     [SerializeField] BeltPrefabSet _prefabSet;
-    [SerializeField] float _height = 0f;
     [SerializeField] float _heightStep = 0.1f;
 
     private void Start()
@@ -31,14 +30,14 @@ public class BeltRenderer : ResourceHolderRenderer
     {
         ResetSprites();
 
-        float height = _height;
+        float height = HexLayerUtil.GetHeight(_belt.hexCollider.layer);
         List<ResourceHolder> neighborHolders = _belt.GetNeighbors(feederOnly: true);
         if (neighborHolders.Any())
         {
             foreach (ResourceHolder neighborHolder in neighborHolders)
             {
                 DrawBeltLane(neighborHolder.direction, _belt.direction, height);
-                height += _heightStep;
+                height -= _heightStep;
             }
         }
         else

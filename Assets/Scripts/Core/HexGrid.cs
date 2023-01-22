@@ -48,47 +48,12 @@ public class HexGrid : SingletonBase<HexGrid>
         _colliders[hexCollider.position].Remove(hexCollider.layer);
     }
 
-    public Vector3 GetWorldPos(Vector2Int position)
+    public Vector3 GetWorldPos(Vector2Int position, HexLayer hexLayer = HexLayer.FLOOR)
     {
-        var x = unitSize * 3 / 2 * position.x;
-        var y = unitSize * Mathf.Sqrt(3) / 2 * position.y;
-        return origin + new Vector3(x, y);
-    }
-
-    public Vector2Int GetHexPosOLD(Vector3 worldPosition)
-    {
-        worldPosition -= origin;
-        float x = worldPosition.x / (unitSize * 3 / 2);
-        float y = worldPosition.y / (unitSize * Mathf.Sqrt(3) / 2);
-
-        Vector2Int hexPos = new Vector2Int(Mathf.RoundToInt(x), Mathf.RoundToInt(y));
-
-        if (IsValidCoordinates(hexPos))
-        {
-            return hexPos;
-        }
-        else
-        {
-            Vector2Int originalHexPos = hexPos;
-            float minDist = Mathf.Infinity;
-            Vector2Int[] offsets = new Vector2Int[]{
-                 new Vector2Int(0, 1),
-                 new Vector2Int(0, -1),
-                 new Vector2Int(1, 0),
-                 new Vector2Int(-1, 0),
-             };
-            foreach (Vector2Int offset in offsets)
-            {
-                Vector2Int testPos = originalHexPos + offset;
-                float sqDist = (GetWorldPos(testPos) - worldPosition).sqrMagnitude;
-                if (sqDist < minDist)
-                {
-                    minDist = sqDist;
-                    hexPos = testPos;
-                }
-            }
-            return hexPos;
-        }
+        float x = unitSize * 3 / 2 * position.x;
+        float y = unitSize * Mathf.Sqrt(3) / 2 * position.y;
+        float z = HexLayerUtil.GetHeight(hexLayer);
+        return origin + new Vector3(x, y, z);
     }
 
     public Vector2Int GetHexPos(Vector3 worldPosition)
