@@ -1,3 +1,4 @@
+using DirectionEnum;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -11,11 +12,20 @@ public class BuildingInstanciator : SingletonBase<BuildingInstanciator>
     private Vector2 _lastPosition;
     private float snapAnimDuration = 0.03f;
     private int _ltSnapAnimId;
+    private bool _isDeleteMode = false;
 
     public void SetBuildingPrefab(GameObject buildingPrefab)
     {
+        _isDeleteMode = false;
         _buildingPrefab = buildingPrefab;
         CreateGhostObject();
+    }
+
+    public void SetDeleteMode()
+    {
+        _buildingPrefab = null;
+        _ghostGameObject = null;
+        _isDeleteMode = true;
     }
 
     private static readonly int PLACE_BUTTON = 0; // left button
@@ -44,6 +54,15 @@ public class BuildingInstanciator : SingletonBase<BuildingInstanciator>
         }
     }
 
+    public void DeleteGameObject()
+    {
+        foreach (HexLayer layer in EnumUtil.GetValues<HexLayer>())
+        {
+            HexCollider collider = HexGrid.instance.GetColliderAtPosition(GetMouseHexPos(), layer);
+            if (collider != null)
+                Destroy(collider.gameObject);
+        }
+    }
     private bool CanPlace()
     {
         return HexGrid.instance.GetColliderAtPosition(
@@ -64,7 +83,12 @@ public class BuildingInstanciator : SingletonBase<BuildingInstanciator>
     void Update()
     {
         if (Input.GetMouseButtonDown(PLACE_BUTTON) && IsNotClickingUI())
-            PlaceGameObject();
+        {
+            if (_isDeleteMode)
+                DeleteGameObject();
+            else
+                PlaceGameObject();
+        }
 
         else if (Input.GetMouseButtonDown(CANCEL_BUTTON) && IsNotClickingUI())
             CancelSelection();
@@ -81,12 +105,8 @@ public class BuildingInstanciator : SingletonBase<BuildingInstanciator>
 
     private void SnapGhostToGrid(bool instant = false)
     {
-        Vector3 screenPosition = Input.mousePosition;
-        screenPosition.z = 0;
-        Vector3 worldPosition = Camera.main.ScreenToWorldPoint(screenPosition);
 
-        Vector2Int hexPosition = HexGrid.instance.GetHexPos(worldPosition);
-        _resourceHolder.hexCollider.position = hexPosition;
+        _resourceHolder.hexCollider.position = GetMouseHexPos();
 
         Vector3 snappedWorldPosition = _resourceHolder.hexCollider.GetSnappedPosition();
 
@@ -128,5 +148,13 @@ public class BuildingInstanciator : SingletonBase<BuildingInstanciator>
             _resourceHolder.transform.Rotate(new Vector3(0, 0, 60));
             _resourceHolder.InferDirection();
         }
+    }
+
+    private Vector2Int GetMouseHexPos()
+    {
+        Vector3 screenPosition = Input.mousePosition;
+        screenPosition.z = 0;
+        Vector3 worldPosition = Camera.main.ScreenToWorldPoint(screenPosition);
+        return HexGrid.instance.GetHexPos(worldPosition);
     }
 }

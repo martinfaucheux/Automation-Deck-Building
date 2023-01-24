@@ -32,6 +32,8 @@ public abstract class ResourceHolder : MonoBehaviour
 
     void OnDestroy()
     {
+        if (heldResource != null)
+            Destroy(heldResource.gameObject);
         BeltManager.instance.RemoveHolder(this);
     }
 
