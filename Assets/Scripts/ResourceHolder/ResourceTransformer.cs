@@ -3,10 +3,7 @@ using System.Linq;
 using UnityEngine;
 public class ResourceTransformer : ResourceHolder
 {
-    public override bool IsAllowedToGive() => true;
-
-    public override bool IsAllowedToReceive() => true;
-
+    [SerializeField] ResourceInstantiator _instantiator;
     [SerializeField] List<Recipe> _recipes;
     public Process process;
 
@@ -18,6 +15,9 @@ public class ResourceTransformer : ResourceHolder
     {
         InitStore();
     }
+
+    public override bool IsAllowedToGive() => true;
+    public override bool IsAllowedToReceive() => true;
 
     public override bool IsAllowedToReceiveFrom(ResourceHolder resourceHolder)
     {
@@ -102,15 +102,7 @@ public class ResourceTransformer : ResourceHolder
                 if (_storedResources[resourceType] > 0)
                 {
                     _storedResources[resourceType]--;
-
-                    // TODO: mutualize this with resource producer
-                    Vector3 position = this.transform.position;
-                    position.z = HexLayerUtil.GetHeight(HexLayer.CONTAINED);
-
-                    GameObject resourceGameObject = Instantiate(_resourcePrefab, position, Quaternion.identity);
-                    ResourceObject resourceComponent = resourceGameObject.GetComponent<ResourceObject>();
-                    resourceComponent.SetType(resourceType);
-                    heldResource = resourceComponent;
+                    _instantiator.InstantiateResource(resourceType);
                     break;
                 }
             }

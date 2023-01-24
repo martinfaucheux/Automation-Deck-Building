@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 8521326098090233704}
   - component: {fileID: 8521326098090233706}
   - component: {fileID: 8521326098090233618}
+  - component: {fileID: 3405422521394935386}
   m_Layer: 0
   m_Name: Grinder
   m_TagString: Untagged
@@ -65,12 +66,25 @@ MonoBehaviour:
   <heldResource>k__BackingField: {fileID: 0}
   _renderer: {fileID: 0}
   hexCollider: {fileID: 8521326098090233706}
+  _instantiator: {fileID: 3405422521394935386}
   _recipes:
   - {fileID: 11400000, guid: aadc8ec0340a4654f95ae08fd196f7d4, type: 2}
   process: 0
   maxStoredResources: 10
   _resourcePrefab: {fileID: 7722736271563700972, guid: 30d2222ea5c0e7447aea1dcba0696a41, type: 3}
-  _initialResourceZ: -0.2
+--- !u!114 &3405422521394935386
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8521326098090233621}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6a56378940d2e654bb3475d0b087c988, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _resourcePrefab: {fileID: 7722736271563700972, guid: 30d2222ea5c0e7447aea1dcba0696a41, type: 3}
 --- !u!1 &8521326098760212876
 GameObject:
   m_ObjectHideFlags: 0

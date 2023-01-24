@@ -264,6 +264,7 @@ GameObject:
   - component: {fileID: 6172215963208734424}
   - component: {fileID: 6172215963208734426}
   - component: {fileID: 6172215963208734427}
+  - component: {fileID: 8735167282178159329}
   m_Layer: 0
   m_Name: Producer
   m_TagString: Untagged
@@ -318,6 +319,18 @@ MonoBehaviour:
   <heldResource>k__BackingField: {fileID: 0}
   _renderer: {fileID: 0}
   hexCollider: {fileID: 6172215963208734426}
-  _resourcePrefab: {fileID: 7722736271563700972, guid: 30d2222ea5c0e7447aea1dcba0696a41, type: 3}
-  _initialResourceZ: -0.2
   _resourceType: {fileID: 11400000, guid: 115734fdc77fd764c9309e0371a77d51, type: 2}
+  _instantiator: {fileID: 8735167282178159329}
+--- !u!114 &8735167282178159329
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6172215963208734373}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6a56378940d2e654bb3475d0b087c988, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _resourcePrefab: {fileID: 7722736271563700972, guid: 30d2222ea5c0e7447aea1dcba0696a41, type: 3}

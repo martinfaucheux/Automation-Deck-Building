@@ -2,8 +2,8 @@ using UnityEngine;
 
 public class ResourceProducer : ResourceHolder
 {
-    [SerializeField] GameObject _resourcePrefab;
     [SerializeField] ResourceType _resourceType;
+    [SerializeField] ResourceInstantiator _instantiator;
 
     // Generally, does this ResourceHolder have the right to receive any resource
     public override bool IsAllowedToReceive() => false;
@@ -16,14 +16,6 @@ public class ResourceProducer : ResourceHolder
     public override void OnTick()
     {
         if (heldResource == null)
-        {
-            Vector3 position = this.transform.position;
-            position.z = HexLayerUtil.GetHeight(HexLayer.CONTAINED);
-
-            GameObject resourceGameObject = Instantiate(_resourcePrefab, position, Quaternion.identity);
-            ResourceObject resourceComponent = resourceGameObject.GetComponent<ResourceObject>();
-            resourceComponent.SetType(_resourceType);
-            heldResource = resourceComponent;
-        }
+            _instantiator.InstantiateResource(_resourceType);
     }
 }
