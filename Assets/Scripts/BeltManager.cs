@@ -7,6 +7,7 @@ public class BeltManager : SingletonBase<BeltManager>
     public event Action onTick;
     public float tickPeriod = 0.5f;
     public float moveDuration = 0.1f;
+    [SerializeField] Transform _beltSystemContainer;
     private float lastTick;
     private GenericGrid<ResourceHolder> _holderGrid = new GenericGrid<ResourceHolder>();
     private List<BeltSystem> _beltSystems = new List<BeltSystem>();
@@ -66,6 +67,10 @@ public class BeltManager : SingletonBase<BeltManager>
 
     public void BuildSystems()
     {
+        // This can happen when shutting down the scene
+        if (_beltSystemContainer == null)
+            return;
+
         CleanSystems();
 
         foreach (ResourceHolder resourceHolder in _holderGrid)
@@ -76,7 +81,7 @@ public class BeltManager : SingletonBase<BeltManager>
             if (!resourceHolder.isDirty)
                 continue;
 
-            BeltSystem system = gameObject.AddComponent<BeltSystem>();
+            BeltSystem system = _beltSystemContainer.gameObject.AddComponent<BeltSystem>();
             system.AddHolder(resourceHolder);
             _beltSystems.Add(system);
         }
