@@ -26,6 +26,7 @@ public abstract class ResourceHolder : MonoBehaviour
     {
         InferDirection();
         Initialize(true);
+        Render();
         foreach (ResourceHolder neighborHolder in GetNeighbors())
             neighborHolder.Render();
     }
