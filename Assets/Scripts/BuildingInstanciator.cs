@@ -44,9 +44,12 @@ public class BuildingInstanciator : SingletonBase<BuildingInstanciator>
 
     public void PlaceGameObject()
     {
-        if (_ghostGameObject != null && CanPlace())
+        Vector2Int mouseHexPosition = GetMouseHexPos();
+        if (_ghostGameObject != null && CanPlace(mouseHexPosition))
         {
+            _resourceHolder.hexCollider.SetPosition(mouseHexPosition);
             _resourceHolder.Place();
+
             _ghostGameObject = null;
             _resourceHolder = null;
 
@@ -63,10 +66,10 @@ public class BuildingInstanciator : SingletonBase<BuildingInstanciator>
                 Destroy(collider.gameObject);
         }
     }
-    private bool CanPlace()
+    private bool CanPlace(Vector2Int position)
     {
         return HexGrid.instance.GetColliderAtPosition(
-            _resourceHolder.hexCollider.position, _resourceHolder.hexCollider.layer
+           position, _resourceHolder.hexCollider.layer
         ) == null;
     }
 
@@ -105,10 +108,10 @@ public class BuildingInstanciator : SingletonBase<BuildingInstanciator>
 
     private void SnapGhostToGrid(bool instant = false)
     {
-
-        _resourceHolder.hexCollider.SetPosition(GetMouseHexPos());
-
-        Vector3 snappedWorldPosition = _resourceHolder.hexCollider.GetSnappedPosition();
+        Vector2Int mouseHexPos = GetMouseHexPos();
+        Vector3 snappedWorldPosition = HexGrid.instance.GetWorldPos(
+            mouseHexPos, _resourceHolder.hexCollider.layer
+        );
 
         if (instant)
         {
