@@ -106,7 +106,7 @@ public class BuildingInstanciator : SingletonBase<BuildingInstanciator>
     private void SnapGhostToGrid(bool instant = false)
     {
 
-        _resourceHolder.hexCollider.position = GetMouseHexPos();
+        _resourceHolder.hexCollider.SetPosition(GetMouseHexPos());
 
         Vector3 snappedWorldPosition = _resourceHolder.hexCollider.GetSnappedPosition();
 

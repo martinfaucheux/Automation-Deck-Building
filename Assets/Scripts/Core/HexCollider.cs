@@ -3,7 +3,8 @@ using UnityEngine;
 
 public class HexCollider : MonoBehaviour
 {
-    public Vector2Int position;
+    [field: SerializeField]
+    public Vector2Int position { get; private set; }
     public HexLayer layer;
 
     public HexGrid grid { get => HexGrid.instance; }
@@ -17,6 +18,12 @@ public class HexCollider : MonoBehaviour
     void OnDestroy()
     {
         grid?.RemoveCollider(this);
+    }
+
+    public void SetPosition(Vector2Int position)
+    {
+        grid.MoveCollider(this, position);
+        this.position = position;
     }
 
     public Vector3 GetSnappedPosition()

@@ -34,7 +34,7 @@ public class ResourceObject : MonoBehaviour
         Vector3 targetPosition = HexGrid.instance.GetWorldPos(position);
         targetPosition.z = transform.position.z;
 
-        _hexCollider.position = position;
+        _hexCollider.SetPosition(position);
         LeanTween.move(
             gameObject,
             targetPosition,

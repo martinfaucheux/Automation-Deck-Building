@@ -37,15 +37,21 @@ public class HexGrid : SingletonBase<HexGrid>
     public void AddCollider(HexCollider hexCollider)
     {
         Vector2Int position = hexCollider.position;
-        if (!_colliders.ContainsKey(position))
-            _colliders[position] = new Dictionary<HexLayer, HexCollider>();
-
+        SetLayerDict(position);
         _colliders[position][hexCollider.layer] = hexCollider;
     }
 
     public void RemoveCollider(HexCollider hexCollider)
     {
         _colliders[hexCollider.position].Remove(hexCollider.layer);
+    }
+
+    public void MoveCollider(HexCollider hexCollider, Vector2Int position)
+    {
+        _colliders[hexCollider.position].Remove(hexCollider.layer);
+        SetLayerDict(position);
+        _colliders[position][hexCollider.layer] = hexCollider;
+
     }
 
     public Vector3 GetWorldPos(Vector2Int position, HexLayer hexLayer = HexLayer.FLOOR)
@@ -87,6 +93,12 @@ public class HexGrid : SingletonBase<HexGrid>
 
     public HexCollider GetColliderAtPosition(Vector2Int position, HexLayer layer)
     {
+        // TODO: this method doesn't work for moving collider.
+        // 2 solutions:
+        // -  when updating the position of a HexCollider, use a method that will remove / add the key
+        //    in the internal dictionnary
+        // -  Keep only the list of colliders and a grid.get access will sequencially scan for each
+        //    registered collider position
         if (_colliders.ContainsKey(position))
             if (_colliders[position].ContainsKey(layer))
                 return _colliders[position][layer];
@@ -111,4 +123,10 @@ public class HexGrid : SingletonBase<HexGrid>
     }
 
     public static bool IsValidCoordinates(Vector2Int coordinates) => MathUtil.Modulo(coordinates.x + coordinates.y, 2) == 0;
+
+    private void SetLayerDict(Vector2Int position)
+    {
+        if (!_colliders.ContainsKey(position))
+            _colliders[position] = new Dictionary<HexLayer, HexCollider>();
+    }
 }
