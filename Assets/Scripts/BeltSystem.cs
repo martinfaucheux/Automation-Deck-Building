@@ -28,6 +28,10 @@ public class BeltSystem : MonoBehaviour
             ResourceHolder targetHolder = resourceHolder.GetTargetHolder();
             if (
                 targetHolder != null
+                // exclude A><B
+                && !resourceHolder.IsFeeder(targetHolder)
+                // TODO: IsAllowedToReceiveFrom should be used only to check resource compatibility at runtime
+                // need to implement a new abstract method if we want to check building geometry compatibility
                 && targetHolder.IsAllowedToReceiveFrom(resourceHolder)
                 && targetHolder.isDirty
             )
@@ -39,10 +43,11 @@ public class BeltSystem : MonoBehaviour
         if (resourceHolder.IsAllowedToReceive())
         {
             // TODO: use feederOnly
-            foreach (ResourceHolder neighborHolder in resourceHolder.GetNeighbors())
+            foreach (ResourceHolder neighborHolder in resourceHolder.GetNeighbors(feederOnly: true))
             {
                 if (
-                    (neighborHolder.GetTargetHolder() == resourceHolder)
+                    // exclude A><B
+                    resourceHolder.GetTargetHolder() != neighborHolder
                     // TODO: IsAllowedToReceiveFrom should be used only to check resource compatibility at runtime
                     // need to implement a new abstract method if we want to check building geometry compatibility
                     && resourceHolder.IsAllowedToReceiveFrom(neighborHolder)

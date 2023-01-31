@@ -65,15 +65,20 @@ public class BeltRenderer : ResourceHolderRenderer
             beltGameObject.transform.localScale = scale;
         }
 
-        Quaternion rotation = Quaternion.Euler(0f, 0f, inputDirection.Opposite().ToAngleDegree());
-        beltGameObject.transform.rotation = rotation;
+        float angleDegree;
+        if (angleDiff == 0)
+            angleDegree = inputDirection.ToAngleDegree();
+        else
+            angleDegree = inputDirection.Opposite().ToAngleDegree();
+
+        beltGameObject.transform.rotation = Quaternion.Euler(0f, 0f, angleDegree);
         return beltGameObject;
     }
 
     private void ResetSprites()
     {
-        for (int childCount = 0; childCount < transform.childCount; childCount++)
-            Destroy(transform.GetChild(0).gameObject);
+        foreach (Transform childTransform in transform)
+            Destroy(childTransform.gameObject);
     }
 
     private GameObject AngleDiffToPrefab(int angleDiff)
@@ -82,8 +87,8 @@ public class BeltRenderer : ResourceHolderRenderer
         switch (angleDiff / 60)
         {
             case 0:
-                Debug.LogError("Cannot Draw a U-Turn Belt");
-                return null;
+                prefab = _prefabSet.straight;
+                break;
             case 1:
                 prefab = _prefabSet.smallTurn;
                 break;

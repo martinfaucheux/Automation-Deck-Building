@@ -73,6 +73,7 @@ public abstract class ResourceHolder : MonoBehaviour
 
     public Vector2Int GetTargetPos() => position + direction.ToHexPosition();
     public ResourceHolder GetTargetHolder() => BeltManager.instance.GetHolderAtPos(GetTargetPos());
+    public bool IsFeeder(ResourceHolder resourceHolder) => resourceHolder.GetTargetHolder() == this;
 
     // <summary>
     // Update willFlush i.e. whether this holder will be able to pass its resource
@@ -87,6 +88,7 @@ public abstract class ResourceHolder : MonoBehaviour
             // check if target position has a valid ResourceHolder
             if (
                 targetHolder != null
+                && targetHolder.system == this.system
                 && targetHolder.IsAllowedToReceiveFrom(this)
                 && targetHolder._futureResource == null
             )
