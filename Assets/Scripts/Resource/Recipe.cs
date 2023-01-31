@@ -11,7 +11,6 @@ public struct ResourceCount
 [CreateAssetMenu(menuName = "ScriptableObject / Recipe")]
 public class Recipe : ScriptableObject
 {
-    public Sprite sprite;
     public List<ResourceCount> ingredients;
     public ResourceCount product;
     public Process process;

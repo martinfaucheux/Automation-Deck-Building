@@ -12,7 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0b965b46d9210114cbd9846b1b0d9a20, type: 3}
   m_Name: Flour
   m_EditorClassIdentifier: 
-  sprite: {fileID: 0}
   ingredients:
   - type: {fileID: 11400000, guid: 115734fdc77fd764c9309e0371a77d51, type: 2}
     count: 1

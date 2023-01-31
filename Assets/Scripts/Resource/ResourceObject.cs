@@ -5,6 +5,7 @@ public class ResourceObject : MonoBehaviour
 {
     [SerializeField] HexCollider _hexCollider;
     [SerializeField] ResourceHolder _resourceHolder;
+    [SerializeField] SpriteRenderer _spriteRenderer;
     [field: SerializeField] public ResourceType resourceType { get; private set; }
 
     void Start()
@@ -45,6 +46,6 @@ public class ResourceObject : MonoBehaviour
     public void SetType(ResourceType resourceType)
     {
         this.resourceType = resourceType;
-        // TODO: show sprite of the resourceType
+        _spriteRenderer.sprite = resourceType.sprite;
     }
 }
