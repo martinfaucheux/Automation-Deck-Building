@@ -8,24 +8,18 @@ public class ResourceTransformer : ResourceHolder
     public Process process;
 
     public override bool IsAllowedToGive() => true;
-    public override bool IsAllowedToReceive() => true;
 
     private void Start()
     {
         _store.Initialize(_recipes);
     }
 
-    public override bool IsAllowedToReceiveFrom(ResourceHolder resourceHolder)
+    public override bool IsAllowedResource(ResourceObject resource)
     {
-        ResourceObject heldResource = resourceHolder.heldResource;
-        if (heldResource == null)
-            return true;
-
-        ResourceType resourceType = heldResource.resourceType;
         return (
-            resourceType != null
-            && GetRecipe(resourceHolder.heldResource.resourceType) != null
-            && _store.CanStore(resourceType, 1)
+            resource.resourceType != null
+            && GetRecipe(resource.resourceType) != null
+            && _store.CanStore(resource.resourceType, 1)
         );
     }
 

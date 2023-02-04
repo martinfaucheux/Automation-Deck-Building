@@ -265,6 +265,7 @@ GameObject:
   - component: {fileID: 6172215963208734426}
   - component: {fileID: 6172215963208734427}
   - component: {fileID: 8735167282178159329}
+  - component: {fileID: 7084935976915947618}
   m_Layer: 0
   m_Name: Producer
   m_TagString: Untagged
@@ -299,7 +300,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 260e16b47c164894abb8e3040b19823d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  position: {x: 3, y: 11}
+  <position>k__BackingField: {x: 0, y: 0}
   layer: 0
 --- !u!114 &6172215963208734427
 MonoBehaviour:
@@ -317,6 +318,7 @@ MonoBehaviour:
   system: {fileID: 0}
   direction: 0
   <heldResource>k__BackingField: {fileID: 0}
+  <geometry>k__BackingField: {fileID: 7084935976915947618}
   _renderer: {fileID: 0}
   hexCollider: {fileID: 6172215963208734426}
   _resourceType: {fileID: 11400000, guid: 115734fdc77fd764c9309e0371a77d51, type: 2}
@@ -334,3 +336,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _resourcePrefab: {fileID: 7722736271563700972, guid: 30d2222ea5c0e7447aea1dcba0696a41, type: 3}
+--- !u!114 &7084935976915947618
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6172215963208734373}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 23ad4e354a37c1c4cabd9d5554b8cd44, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _resourceHolder: {fileID: 6172215963208734427}
+  _inputDirections: 

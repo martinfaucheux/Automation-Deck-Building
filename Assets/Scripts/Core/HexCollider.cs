@@ -43,6 +43,10 @@ public class HexCollider : MonoBehaviour
         transform.position = GetSnappedPosition();
     }
 
+    // <summary
+    // get the direction in which the neighbor is located
+    // if the other collider is not a direct neighbor, return null
+    // </summary>
     public Direction? GetNeighborDirection(HexCollider otherCollider)
     {
         return DirectionUtil.GetDirectionFromPosition(otherCollider.position - this.position);

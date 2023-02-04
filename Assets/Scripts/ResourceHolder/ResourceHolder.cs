@@ -13,6 +13,7 @@ public abstract class ResourceHolder : MonoBehaviour
     public Direction direction;
     private ResourceObject _futureResource;
     [field: SerializeField] public ResourceObject heldResource { get; protected set; }
+    [field: SerializeField] public HolderGeometry geometry { get; protected set; }
     [SerializeField] protected ResourceHolderRenderer _renderer;
     public HexCollider hexCollider;
     public Vector2Int position { get => hexCollider.position; }
@@ -40,9 +41,8 @@ public abstract class ResourceHolder : MonoBehaviour
 
     // Method run on BeltManager tick before distributing the resource
     public abstract void OnTick();
-    public abstract bool IsAllowedToReceive();
     public abstract bool IsAllowedToGive();
-    public abstract bool IsAllowedToReceiveFrom(ResourceHolder resourceHolder);
+    public abstract bool IsAllowedResource(ResourceObject resourceObject);
 
     public void SetHeldResource(ResourceObject resource) => heldResource = resource;
 
@@ -52,7 +52,7 @@ public abstract class ResourceHolder : MonoBehaviour
         willFlush = false;
     }
 
-    public List<ResourceHolder> GetNeighbors(bool feederOnly = false)
+    public List<ResourceHolder> GetNeighbors(bool feederOnly = false, bool sameSystemOnly = false)
     {
         List<ResourceHolder> neighbors = new List<ResourceHolder>();
         foreach (Direction direction in EnumUtil.GetValues<Direction>())
@@ -65,6 +65,7 @@ public abstract class ResourceHolder : MonoBehaviour
             if (
                 resourceHolder != null
                 && (!feederOnly || resourceHolder.GetTargetHolder() == this)
+                && (!sameSystemOnly || resourceHolder.system == system)
             )
                 neighbors.Add(resourceHolder);
         }
@@ -74,6 +75,8 @@ public abstract class ResourceHolder : MonoBehaviour
     public Vector2Int GetTargetPos() => position + direction.ToHexPosition();
     public ResourceHolder GetTargetHolder() => BeltManager.instance.GetHolderAtPos(GetTargetPos());
     public bool IsFeeder(ResourceHolder resourceHolder) => resourceHolder.GetTargetHolder() == this;
+
+    public bool IsAllowedToReceiveFrom(ResourceHolder resourceHolder) => geometry.IsAllowedToReceiveFrom(resourceHolder);
 
     // <summary>
     // Update willFlush i.e. whether this holder will be able to pass its resource
@@ -89,7 +92,7 @@ public abstract class ResourceHolder : MonoBehaviour
             if (
                 targetHolder != null
                 && targetHolder.system == this.system
-                && targetHolder.IsAllowedToReceiveFrom(this)
+                && targetHolder.IsAllowedResource(heldResource)
                 && targetHolder._futureResource == null
             )
             {

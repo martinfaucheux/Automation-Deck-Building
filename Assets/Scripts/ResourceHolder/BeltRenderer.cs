@@ -31,7 +31,7 @@ public class BeltRenderer : ResourceHolderRenderer
         ResetSprites();
 
         float height = HexLayerUtil.GetHeight(_belt.hexCollider.layer);
-        List<ResourceHolder> neighborHolders = _belt.GetNeighbors(feederOnly: true);
+        List<ResourceHolder> neighborHolders = _belt.GetNeighbors(feederOnly: true, sameSystemOnly: true);
         if (neighborHolders.Any())
         {
             foreach (ResourceHolder neighborHolder in neighborHolders)
