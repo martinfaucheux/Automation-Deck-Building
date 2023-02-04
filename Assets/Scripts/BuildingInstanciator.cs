@@ -13,6 +13,7 @@ public class BuildingInstanciator : SingletonBase<BuildingInstanciator>
     private float snapAnimDuration = 0.03f;
     private int _ltSnapAnimId;
     private bool _isDeleteMode = false;
+    private int _lastAngle = 0;
 
     public void SetBuildingPrefab(GameObject buildingPrefab)
     {
@@ -40,6 +41,7 @@ public class BuildingInstanciator : SingletonBase<BuildingInstanciator>
             Debug.LogError("Ghost GameObject should have a ResourceHolder component attached", _buildingPrefab);
 
         SnapGhostToGrid(instant: true);
+        Rotate(_lastAngle);
     }
 
     public void PlaceGameObject()
@@ -97,7 +99,10 @@ public class BuildingInstanciator : SingletonBase<BuildingInstanciator>
             CancelSelection();
 
         else if (Input.GetKeyDown(KeyCode.R))
+        {
             Rotate();
+            _lastAngle++;
+        }
 
         if (_ghostGameObject != null)
         {
@@ -144,11 +149,12 @@ public class BuildingInstanciator : SingletonBase<BuildingInstanciator>
         );
     }
 
-    private void Rotate()
+
+    private void Rotate(int angle = 1)
     {
         if (_ghostGameObject != null)
         {
-            _resourceHolder.transform.Rotate(new Vector3(0, 0, 60));
+            _resourceHolder.transform.Rotate(new Vector3(0, 0, angle * 60));
             _resourceHolder.InferDirection();
         }
     }
