@@ -87,7 +87,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _resourceHolder: {fileID: 8521326098090233618}
-  _inputDirections: 03000000
+  <inputDirections>k__BackingField: 03000000
 --- !u!114 &3405422521394935386
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -14,9 +14,10 @@ public class ResourceTransformer : ResourceHolder
         _store.Initialize(_recipes);
     }
 
-    public override bool IsAllowedResource(ResourceObject resource)
+    public override bool IsAllowedToReceiveFromDynamic(ResourceHolder resourceHolder)
     {
-        return (
+        ResourceObject resource = resourceHolder.heldResource;
+        return resource == null || (
             resource.resourceType != null
             && GetRecipe(resource.resourceType) != null
             && _store.CanStore(resource.resourceType, 1)
@@ -33,7 +34,7 @@ public class ResourceTransformer : ResourceHolder
 
                 _store.Store(resourceType, 1);
                 Destroy(heldResource.gameObject);
-                heldResource = null;
+                SetHeldResource(null);
             }
         }
         foreach (Recipe recipe in _recipes)

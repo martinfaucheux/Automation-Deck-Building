@@ -13,12 +13,14 @@ public class ResourceObject : MonoBehaviour
         ResourceHolder resourceHolder = BeltManager.instance.GetHolderAtPos(_hexCollider.position);
         if (resourceHolder != null)
         {
-            resourceHolder.SetHeldResource(this);
+            // Allow to assign resource a holder if on the ground
+            if (resourceHolder.heldResource == null)
+                resourceHolder.SetHeldResource(this);
+            else if (resourceHolder.heldResource != this)
+                Debug.LogError("Conflict: There is already a resource assigned.", gameObject);
         }
         else
-        {
             Debug.LogError("No holder found", gameObject);
-        }
 
     }
 

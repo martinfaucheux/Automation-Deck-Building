@@ -93,12 +93,6 @@ public class HexGrid : SingletonBase<HexGrid>
 
     public HexCollider GetColliderAtPosition(Vector2Int position, HexLayer layer)
     {
-        // TODO: this method doesn't work for moving collider.
-        // 2 solutions:
-        // -  when updating the position of a HexCollider, use a method that will remove / add the key
-        //    in the internal dictionnary
-        // -  Keep only the list of colliders and a grid.get access will sequencially scan for each
-        //    registered collider position
         if (_colliders.ContainsKey(position))
             if (_colliders[position].ContainsKey(layer))
                 return _colliders[position][layer];

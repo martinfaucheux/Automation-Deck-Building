@@ -5,22 +5,22 @@ using UnityEngine;
 public class HolderGeometry : MonoBehaviour
 {
     [SerializeField] ResourceHolder _resourceHolder;
-    [SerializeField] List<Direction> _inputDirections;
+    [field: SerializeField]
+    public List<Direction> inputDirections { get; private set; }
+
+    public bool IsAllowedToReceiveFrom(Direction direction)
+    {
+        Direction convertedDirection = direction.ToReferential(_resourceHolder.direction);
+        return inputDirections.Contains(convertedDirection);
+    }
 
     public bool IsAllowedToReceiveFrom(ResourceHolder otherHolder)
     {
         Direction? neighborDirection = _resourceHolder.hexCollider.GetNeighborDirection(otherHolder.hexCollider);
         if (neighborDirection != null)
         {
-            Direction convertedDirection = ToReferential((Direction)neighborDirection);
-            return _inputDirections.Contains(convertedDirection);
+            return IsAllowedToReceiveFrom((Direction)neighborDirection);
         }
         return false;
     }
-
-    private Direction ToReferential(Direction direction)
-    {
-        return direction.Rotate(-(int)_resourceHolder.direction);
-    }
-
 }

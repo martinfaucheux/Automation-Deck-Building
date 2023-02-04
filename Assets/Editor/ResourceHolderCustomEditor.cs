@@ -49,3 +49,6 @@ public class ResourceConsumerCustomEditor : ResourceHolderCustomEditor { }
 
 [CustomEditor(typeof(ResourceTransformer))]
 public class ResourceTransformerCustomEditor : ResourceHolderCustomEditor { }
+
+[CustomEditor(typeof(ResourceSwitch))]
+public class ResourceSwitchCustomEditor : ResourceHolderCustomEditor { }

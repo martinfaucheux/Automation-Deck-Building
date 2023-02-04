@@ -12,7 +12,7 @@ public abstract class ResourceHolder : MonoBehaviour
     public BeltSystem system;
     public Direction direction;
     private ResourceObject _futureResource;
-    [field: SerializeField] public ResourceObject heldResource { get; protected set; }
+    [field: SerializeField] public ResourceObject heldResource { get; private set; }
     [field: SerializeField] public HolderGeometry geometry { get; protected set; }
     [SerializeField] protected ResourceHolderRenderer _renderer;
     public HexCollider hexCollider;
@@ -40,11 +40,19 @@ public abstract class ResourceHolder : MonoBehaviour
     }
 
     // Method run on BeltManager tick before distributing the resource
-    public abstract void OnTick();
     public abstract bool IsAllowedToGive();
-    public abstract bool IsAllowedResource(ResourceObject resourceObject);
+    public virtual void OnTick() { }
+    public virtual bool IsAllowedToReceiveFromDynamic(ResourceHolder resourceHolder) => true;
+    public virtual void OnResourceChanged() { }
 
-    public void SetHeldResource(ResourceObject resource) => heldResource = resource;
+    public void SetHeldResource(ResourceObject resource)
+    {
+        //if (this.heldResource != resource)
+        //{
+        heldResource = resource;
+        OnResourceChanged();
+        //}
+    }
 
     public void ResetWillFlush()
     {
@@ -76,7 +84,10 @@ public abstract class ResourceHolder : MonoBehaviour
     public ResourceHolder GetTargetHolder() => BeltManager.instance.GetHolderAtPos(GetTargetPos());
     public bool IsFeeder(ResourceHolder resourceHolder) => resourceHolder.GetTargetHolder() == this;
 
-    public bool IsAllowedToReceiveFrom(ResourceHolder resourceHolder) => geometry.IsAllowedToReceiveFrom(resourceHolder);
+    public bool IsAllowedToReceiveFromStatic(ResourceHolder resourceHolder)
+    {
+        return geometry.IsAllowedToReceiveFrom(resourceHolder);
+    }
 
     // <summary>
     // Update willFlush i.e. whether this holder will be able to pass its resource
@@ -92,7 +103,7 @@ public abstract class ResourceHolder : MonoBehaviour
             if (
                 targetHolder != null
                 && targetHolder.system == this.system
-                && targetHolder.IsAllowedResource(heldResource)
+                && targetHolder.IsAllowedToReceiveFromDynamic(this)
                 && targetHolder._futureResource == null
             )
             {
@@ -110,7 +121,7 @@ public abstract class ResourceHolder : MonoBehaviour
     public void Flush()
     {
         ResourceObject previousResource = heldResource;
-        heldResource = _futureResource;
+        SetHeldResource(_futureResource);
 
         if (willFlush)
         {

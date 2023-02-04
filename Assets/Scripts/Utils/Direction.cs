@@ -36,6 +36,11 @@ namespace DirectionEnum
             return (Direction)(MathUtil.Modulo((int)direction + incr, 6));
         }
 
+        public static Direction ToReferential(this Direction direction, Direction referential)
+        {
+            return direction.Rotate(-(int)referential);
+        }
+
     }
 
     public enum Direction { NE = 0, N = 1, NO = 2, SO = 3, S = 4, SE = 5, NONE = 6 };

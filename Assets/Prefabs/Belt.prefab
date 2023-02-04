@@ -99,7 +99,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _resourceHolder: {fileID: 2632613435689342399}
-  _inputDirections: 0100000002000000030000000400000005000000
+  <inputDirections>k__BackingField: 0100000002000000030000000400000005000000
 --- !u!1001 &2226641804083168897
 PrefabInstance:
   m_ObjectHideFlags: 0

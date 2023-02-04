@@ -80,7 +80,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _resourceHolder: {fileID: 7007499066694615663}
-  _inputDirections: 03000000
+  <inputDirections>k__BackingField: 03000000
 --- !u!1 &3432134717465257799
 GameObject:
   m_ObjectHideFlags: 0

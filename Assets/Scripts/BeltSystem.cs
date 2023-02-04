@@ -28,7 +28,7 @@ public class BeltSystem : MonoBehaviour
             ResourceHolder targetHolder = resourceHolder.GetTargetHolder();
             if (
                 targetHolder != null
-                && targetHolder.IsAllowedToReceiveFrom(resourceHolder)
+                && targetHolder.IsAllowedToReceiveFromStatic(resourceHolder)
                 && targetHolder.isDirty
             )
             {
@@ -39,7 +39,7 @@ public class BeltSystem : MonoBehaviour
         foreach (ResourceHolder neighborHolder in resourceHolder.GetNeighbors(feederOnly: true))
         {
             if (
-                resourceHolder.IsAllowedToReceiveFrom(neighborHolder)
+                resourceHolder.IsAllowedToReceiveFromStatic(neighborHolder)
                 && neighborHolder.isDirty
             )
             {
